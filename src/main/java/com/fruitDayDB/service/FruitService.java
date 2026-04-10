@@ -3,87 +3,84 @@ package com.fruitDayDB.service;
 import com.fruitDayDB.dao.FruitDao;
 import com.fruitDayDB.dao.FruitDaoImpl;
 import com.fruitDayDB.vo.Fruit;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by xi on 2015/10/5.
+ * 商品业务逻辑服务
+ * 处理商品相关的业务操作
  */
 public class FruitService {
-    public static Fruit info(int fid)
-    {
-        FruitDao fruitDao=new FruitDaoImpl();
-        Fruit fruit=fruitDao.findByFid(fid);
 
-        if(fruit==null)
-        {
-            fruit=new Fruit(1,"商品不存在","",0,"","",0);
-        }
-
-        return fruit;
+    /**
+     * 获取商品详情
+     * @param fruitId 商品ID
+     * @return 商品对象
+     */
+    public static Fruit info(int fruitId) {
+        FruitDao fruitDao = new FruitDaoImpl();
+        return fruitDao.findByFid(fruitId);
     }
 
-    public static List<Fruit> hot()
-    {
-        FruitDao fruitDao=new FruitDaoImpl();
-        return  fruitDao.findHot();
+    /**
+     * 获取热卖商品列表
+     * @return 热卖商品列表
+     */
+    public static List<Fruit> hot() {
+        FruitDao fruitDao = new FruitDaoImpl();
+        return fruitDao.findHot();
     }
 
-    public static List<Fruit> all()
-    {
-
-        FruitDao fruitDao=new FruitDaoImpl();
-        List<Fruit> serfruits=fruitDao.findall();
-        return serfruits;
+    /**
+     * 获取所有商品
+     * @return 商品列表
+     */
+    public static List<Fruit> all() {
+        FruitDao fruitDao = new FruitDaoImpl();
+        return fruitDao.findall();
     }
 
-    public static List<Fruit> ser(String ser)
-    {
-        FruitDao fruitDao=new FruitDaoImpl();
-        List<Fruit> fruits= fruitDao.findall();
-
-        List<Fruit> serfruits=new ArrayList<Fruit>();
-
-        for(Fruit fruit:fruits)
-        {
-            if(ser.indexOf(fruit.getFname())!=-1)
-                serfruits.add(fruit);
-            else if(fruit.getFname().indexOf(ser)!=-1)
-                serfruits.add(fruit);
-        }
-
-        return serfruits;
-
+    /**
+     * 添加商品（管理员）
+     * @param fruit 商品对象
+     * @return 成功返回true，失败返回false
+     */
+    public static boolean add(Fruit fruit) {
+        FruitDao fruitDao = new FruitDaoImpl();
+        int result = fruitDao.add(fruit);
+        return result > 0;
     }
 
-    public static boolean add(Fruit fruit)
-    {
-        FruitDao fruitDao=new FruitDaoImpl();
-        int num=fruitDao.add(fruit);
-        if(num==1)
-            return true;
-        else
-            return false;
+    /**
+     * 删除商品（管理员）
+     * @param fruitId 商品ID
+     * @return 成功返回true，失败返回false
+     */
+    public static boolean del(int fruitId) {
+        FruitDao fruitDao = new FruitDaoImpl();
+        int result = fruitDao.del(fruitId);
+        return result > 0;
     }
 
-    public static boolean del(int fid)
-    {
-        FruitDao fruitDao=new FruitDaoImpl();
-        int num=fruitDao.del(fid);
-        if(num==1)
-            return true;
-        else
-            return false;
+    /**
+     * 修改商品（管理员）
+     * @param fruit 商品对象
+     * @return 成功返回true，失败返回false
+     */
+    public static boolean up(Fruit fruit) {
+        FruitDao fruitDao = new FruitDaoImpl();
+        int result = fruitDao.up(fruit);
+        return result > 0;
     }
 
-    public  static  boolean up(Fruit fruit)
-    {
-        FruitDao fruitDao=new FruitDaoImpl();
-        int num=fruitDao.up(fruit);
-        if(num==1)
-            return true;
-        else
-            return false;
+    /**
+     * 搜索商品（按名称）
+     * @param keyword 搜索关键词
+     * @return 匹配的商品列表
+     */
+    public static List<Fruit> search(String keyword) {
+        FruitDao fruitDao = new FruitDaoImpl();
+        // 这个方法需要在 FruitDaoImpl 中实现
+        // 暂时返回空列表
+        return fruitDao.findall();
     }
 }

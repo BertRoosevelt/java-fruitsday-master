@@ -21,10 +21,10 @@ public class DBUtils {
 
     //使用静态块加载驱动程序
     static{
-        URL = "jdbc:mysql://127.0.0.1:3306/fruitday";
+        URL = "jdbc:mysql://127.0.0.1:3306/fruitday?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8";
         USERNAME = "root";
-        PASSWORD = "2004020421";
-        DRIVER = "com.mysql.jdbc.Driver";
+        PASSWORD = "liujingbo619";
+        DRIVER = "com.mysql.cj.jdbc.Driver";
         try {
             Class.forName(DRIVER);
         } catch (ClassNotFoundException e) {

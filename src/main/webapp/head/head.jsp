@@ -1,95 +1,85 @@
 <%@ page import="com.fruitDayDB.vo.User" %>
 <%--
-  Created by IntelliJ IDEA.
-  User: xi
-  Date: 2015/10/3
-  Time: 19:39
-  To change this template use File | Settings | File Templates.
+页面头部导航栏
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-  <title></title>
-  <link rel="stylesheet" type="text/css" href="head/css/head.css"/>
-  <jsp:include page="/ShopServlet?key=num"></jsp:include>
-  <%
-    User user=new User(0,"","","","");
-    int num=0;
-    if(session.getAttribute("user")!=null)
-      user=(User)session.getAttribute("user");
-    if(request.getAttribute("num")!=null)
-     num=(Integer)request.getAttribute("num");
-  %>
-</head>
+<header class="header">
+  <div class="header-container">
+    <div class="logo">
+      <a href="<%= request.getContextPath() %>/index.jsp">
+        <h1>🍎 天天果园</h1>
+      </a>
+    </div>
 
-<body>
-  <div class="top">
-    <div class="con">
-
-      <div class="head_left">您好,欢迎来到天天果园！</div>
-
+    <div class="header-menu">
+      <a href="<%= request.getContextPath() %>/index.jsp">首页</a>
+      <a href="<%= request.getContextPath() %>/SELServlet?key=hot">热卖商品</a>
       <%
-        if(user.getId()==0)
-          out.print("        <div class=\"head_right noLink\" >\n" +
-                  "            <a href=\"login.jsp\">[ 登陆 ]</a>&nbsp;&nbsp;\n" +
-                  "            <a href=\"reg.jsp\">[ 注册<span style=\"color: red;font-size: 12px;\">有惊喜</span> ]</a>\n" +
-                  "        </div>");
-        else {
-          out.print("      <div class=\"head_right\" >\n" +
-                  "        <div class=\"username\"><a href=\"#\">"+user.getUname()+"</a></div>\n" +
-                  "        <div class=\"star\">\n" +
-                  "          <div class=\"star_img\">\n" +
-                  "          </div>\n" +
-                  "          <div class=\"toStar\"><a href=\""+request.getContextPath()+"/ShopServlet?key=show&id="+user.getId()+"&boob=star\">我的关注</a>\n" +
-                  "          </div>\n" +
-                  "        </div>\n" +
-                  "      </div>");
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+      %>
+      <a href="<%= request.getContextPath() %>/showcart.jsp">购物车</a>
+      <a href="<%= request.getContextPath() %>/OrderServlet?key=list">我的订单</a>
+      <span>欢迎，<strong><%= user.getUname() %></strong></span>
+      <a href="<%= request.getContextPath() %>/UserServlet?key=logout">退出登录</a>
+      <%
+      } else {
+      %>
+      <a href="<%= request.getContextPath() %>/login.jsp">登录</a>
+      <a href="<%= request.getContextPath() %>/reg.jsp">注册</a>
+      <%
         }
       %>
-
     </div>
   </div>
+</header>
 
-  <%--网站图标、搜索框、购物车--%>
-  <div class="head">
-    <div class="con">
+<style>
+  .header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
 
-      <div class="logo">
-        <a href="BSindex.jsp">
-          <img src="head/imgs/fdaylogo.png" alt="天天果园-水果网购首选品牌，水果，我们只挑有来头的！"  />
-        </a>
-      </div>
+  .header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-      <div class="ser">
-        <form action=<%=request.getContextPath()%>/SELServlet?selkey=ser method="post" >
-          <input type="text" name="ser" id="ser_border" value="苹果" />
-          <input type="submit" name="ser_button" id="ser_button" value="搜索" />
-        </form>
-      </div>
+  .logo h1 {
+    margin: 0;
+    font-size: 24px;
+  }
 
-      <div class="shopcart">
-        <div class="cart_img"></div>
-        <div class="cart">
-          <a href=<%=request.getContextPath()%>/ShopServlet?key=show&id=<%=user.getId()%>&boob=cart>我的购物车</a>
-          <div class="cart_num" id="cart_num"><%=num%></div>
-        </div>
-        <div class="cart_to">></div>
-      </div>
+  .logo a {
+    color: white;
+    text-decoration: none;
+  }
 
-    </div>
-  </div>
+  .header-menu {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
 
-  <%--网站菜单--%>
-  <div class="head_menu">
-    <div class="con">
-      <ul class="hmenu_ul">
-        <li><a href="index.jsp">首页</a></li>
-        <li><a href=<%=request.getContextPath()%>/SELServlet?selkey=all>全部商品</a></li>
-        <li><a href="">进口水果</a></li>
-        <li><a href="">国货</a></li>
-      </ul>
-    </div>
-  </div>
+  .header-menu a,
+  .header-menu span {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+  }
 
-</body>
-</html>
+  .header-menu a:hover {
+    color: #f0ad4e;
+  }
+
+  .header-menu strong {
+    color: #f0ad4e;
+  }
+</style>
