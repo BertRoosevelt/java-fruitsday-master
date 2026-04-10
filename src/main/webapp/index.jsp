@@ -30,11 +30,11 @@
 %>
 
 <div class="banner">
-  <div id="p0" class="show"><a href="http://www.tiantianfruit.com/"><img src="img/index/h0.jpg" alt=""/></a></div>
-  <div id="p1" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h1.jpg" alt=""/></a></div>
-  <div id="p2" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h2.jpg" alt=""/></a></div>
-  <div id="p3" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h3.jpg" alt=""/></a></div>
-  <div id="p4" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h4.jpg" alt=""/></a></div>
+  <div id="p0" class="show"><a href="http://www.tiantianfruit.com/"><img src="img/index/h0.jpg" alt="天天果园促销活动1"/></a></div>
+  <div id="p1" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h1.jpg" alt="天天果园促销活动2"/></a></div>
+  <div id="p2" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h2.jpg" alt="天天果园促销活动3"/></a></div>
+  <div id="p3" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h3.jpg" alt="天天果园促销活动4"/></a></div>
+  <div id="p4" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h4.jpg" alt="天天果园促销活动5"/></a></div>
   <div class="banner_nav">
     <span id="l0" onmouseover="simg('1')" onmouseout="fimg()">1</span>
     <span id="l1" onmouseover="simg('2')" onmouseout="fimg()">2</span>
