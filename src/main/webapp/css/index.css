@@ -1,8 +1,8 @@
 /* ===== Banner ===== */
-.banner-wrap { width: 100%; background: #1a2a1a; }
-.banner { width: 100%; overflow: hidden; position: relative; }
+.banner-wrap { width: 100%; background: #1a2a1a; margin-bottom: 40px; }
+.banner { max-width: 1200px; margin: 0 auto; overflow: hidden; position: relative; height: 420px; }
 .banner .non { display: none; }
-.banner .show { display: block; }
+.banner .show { display: block; height: 100%; }
 .banner .show img, .banner .non img { width: 100%; height: 420px; object-fit: cover; display: block; }
 
 /* bottom gradient overlay so nav dots stay readable */
@@ -21,26 +21,28 @@
 .con { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
 /* ===== Section header ===== */
-.section-header { display: flex; align-items: center; margin: 32px 0 18px; }
+.section-header { display: flex; justify-content: space-between; align-items: center;
+    margin: 40px 0 20px; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0; }
+.con > .section-header:first-child { margin-top: 0; }
 .section-header h2 { margin: 0; font-size: 20px; color: #333; font-weight: bold;
-    padding: 4px 14px; border-left: 4px solid #669933; }
-.section-header .more-link { margin-left: auto; font-size: 13px; color: #669933; text-decoration: none;
+    padding-left: 12px; border-left: 4px solid #669933; }
+.section-header .more-link { font-size: 13px; color: #669933; text-decoration: none;
     padding: 5px 14px; border: 1px solid #c5e088; border-radius: 20px;
     transition: background 0.2s, color 0.2s; }
 .section-header .more-link:hover { background: #669933; color: #fff; }
 
 /* ===== Product grid ===== */
-.fruit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.fruit-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-bottom: 40px; }
 .fruit-card { background: #fff; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 12px;
-    transition: transform 0.2s, box-shadow 0.2s; }
+    transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
 .fruit-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
-.fruit-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 4px; display: block; }
+.fruit-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 4px; display: block; }
 .fruit-card .fname { margin: 8px 0 4px; font-weight: bold; font-size: 14px; color: #333;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.fruit-card .fname a { color: #333; }
+.fruit-card .fname a { color: #333; text-decoration: none; }
 .fruit-card .fname a:hover { color: #669933; }
-.fruit-card .fspec { font-size: 12px; color: #999; margin-bottom: 6px; }
-.fruit-card .fprice { color: #e85c2a; font-weight: bold; font-size: 16px; }
+.fruit-card .fspec { font-size: 12px; color: #7f8c8d; margin-bottom: 6px; }
+.fruit-card .fprice { color: #e74c3c; font-weight: bold; font-size: 16px; }
 
 /* ===== Empty state ===== */
 .empty-state { text-align: center; padding: 60px 20px; color: #bbb; }
