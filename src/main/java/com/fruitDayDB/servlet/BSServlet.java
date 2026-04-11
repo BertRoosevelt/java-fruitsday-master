@@ -196,7 +196,9 @@ public class BSServlet extends HttpServlet {
         User user=new User(id,email,phone,pwd,uname);
 
         boolean ok=UserService.upUser(user);
-
+        if (!ok) {
+            req.setAttribute("error", "用户信息更新失败，请稍后重试");
+        }
         doAlluser(req, resp);
 
     }
