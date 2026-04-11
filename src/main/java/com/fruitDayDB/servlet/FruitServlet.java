@@ -2,6 +2,7 @@ package com.fruitDayDB.servlet;
 
 import com.fruitDayDB.service.FruitService;
 import com.fruitDayDB.service.ShopService;
+import com.fruitDayDB.service.FavoriteService;
 import com.fruitDayDB.vo.Fruit;
 import com.fruitDayDB.vo.Cart;
 import javax.servlet.ServletException;
@@ -69,9 +70,9 @@ public class FruitServlet extends HttpServlet {
             com.fruitDayDB.vo.User user = (com.fruitDayDB.vo.User) session.getAttribute("user");
 
             if (user != null) {
-                // 分别查询购物车状态（is_favorite=false）和收藏状态（is_favorite=true），两者完全独立
+                // 分别查询购物车状态和收藏状态（两张独立的表）
                 boolean inCart = ShopService.findInCart(user.getId(), fruitId) != null;
-                boolean isFavorite = ShopService.findInFavorites(user.getId(), fruitId) != null;
+                boolean isFavorite = FavoriteService.isFavorite(user.getId(), fruitId);
                 req.setAttribute("isFavorite", isFavorite);
                 req.setAttribute("inCart", inCart);
                 if (inCart) req.setAttribute("tit1", "已加入购物车");
@@ -109,10 +110,4 @@ public class FruitServlet extends HttpServlet {
         req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 
-    /**
-     * 辅助方法：查询购物车中的商品
-     */
-    public static Cart find(int userId, int fruitId) {
-        return ShopService.find(userId, fruitId);
-    }
 }

@@ -45,39 +45,94 @@
       }
     }
 
-    // 加入购物车逻辑
+    // 加入购物车 - AJAX 异步请求，不导致页面导航（复用当前页面）
     function addCart(uid, fid) {
       if (uid === 0 || uid === '0') {
         alert("请先登录后再进行操作！");
         window.location.href = ctx + '/login.jsp';
         return;
       }
-      // 防重复点击拦截
       var btn = document.getElementById("cart");
-      if (btn && btn.value.indexOf("已") !== -1 && btn.value.indexOf("购物车") !== -1) {
+      if (btn && btn.disabled) {
         return;
       }
       var numSpan = document.getElementById("num" + fid);
       var qty = numSpan ? (parseInt(numSpan.innerText) || 1) : 1;
-      // 携带原版特有的 id（用户id）和 str 参数，加入时间戳防缓存
-      var t = new Date().getTime();
-      window.location.href = ctx + "/ShopServlet?key=add&id=" + uid + "&fid=" + fid + "&quantity=" + qty + "&str=cart&t=" + t;
+
+      btn.disabled = true;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", ctx + "/ShopServlet?key=add&fid=" + fid + "&quantity=" + qty, true);
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            try {
+              var data = JSON.parse(xhr.responseText);
+              if (data.success) {
+                btn.value = "已加入购物车";
+                btn.style.backgroundColor = "#CCC";
+                btn.style.cursor = "auto";
+                alert(data.message || "已加入购物车");
+              } else {
+                btn.disabled = false;
+                alert(data.message || "加入购物车失败");
+              }
+            } catch(e) {
+              btn.disabled = false;
+              alert("操作失败，请重试");
+            }
+          } else {
+            btn.disabled = false;
+            alert("操作失败，请重试");
+          }
+        }
+      };
+      xhr.send();
     }
 
-    // 关注（收藏）逻辑
+    // 关注商品 - AJAX 异步请求，不导致页面导航（复用当前页面）
     function addStar(uid, fid) {
       if (uid === 0 || uid === '0') {
         alert("请先登录后再进行操作！");
         window.location.href = ctx + '/login.jsp';
         return;
       }
-      // 防重复点击拦截
       var btn = document.getElementById("star");
-      if (btn && btn.value.indexOf("已") !== -1 && btn.value.indexOf("关注") !== -1) {
+      if (btn && btn.disabled) {
         return;
       }
-      var t = new Date().getTime();
-      window.location.href = ctx + "/ShopServlet?key=favorite&id=" + uid + "&fid=" + fid + "&str=star&t=" + t;
+
+      btn.disabled = true;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", ctx + "/ShopServlet?key=favorite&fid=" + fid, true);
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            try {
+              var data = JSON.parse(xhr.responseText);
+              if (data.success) {
+                btn.value = "已关注";
+                btn.style.backgroundColor = "#CCC";
+                btn.style.cursor = "auto";
+                alert(data.message || "已关注");
+              } else {
+                btn.disabled = false;
+                alert(data.message || "操作失败");
+              }
+            } catch(e) {
+              btn.disabled = false;
+              alert("操作失败，请重试");
+            }
+          } else {
+            btn.disabled = false;
+            alert("操作失败，请重试");
+          }
+        }
+      };
+      xhr.send();
     }
   </script>
 </head>
@@ -136,8 +191,10 @@
           </div>
         </div>
         <div class="btn-row">
-          <div class="Uadd"><input type="button" name="add" id="cart" value="<%=tit1%>" onclick="addCart(<%=user.getId()%>,<%=fruit.getFid()%>)" /></div>
-          <div class="starbutton"><input type="button" name="add" id="star" value="<%=tit2%>" onclick="addStar(<%=user.getId()%>,<%=fruit.getFid()%>)"/></div>
+          <div class="Uadd"><input type="button" name="add" id="cart" value="<%=tit1%>" onclick="addCart(<%=user.getId()%>,<%=fruit.getFid()%>)"
+            <%=("已加入购物车".equals(tit1) ? "disabled style=\"background-color:#CCC;cursor:auto;\"" : "")%>/></div>
+          <div class="starbutton"><input type="button" name="add" id="star" value="<%=tit2%>" onclick="addStar(<%=user.getId()%>,<%=fruit.getFid()%>)"
+            <%=("已关注".equals(tit2) ? "disabled style=\"background-color:#CCC;cursor:auto;\"" : "")%>/></div>
         </div>
       </div>
     </form>

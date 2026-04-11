@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * 购物车数据访问接口
- * 定义购物车相关的数据库操作方法
+ * 定义购物车相关的数据库操作方法（收藏功能已迁移到 FavoriteDao）
  */
 public interface CartDao {
 
@@ -25,15 +25,6 @@ public interface CartDao {
     Cart findByUserIdAndFruitId(int userId, int fruitId);
 
     /**
-     * 根据用户ID、商品ID和收藏状态查询购物车项
-     * @param userId 用户ID
-     * @param fruitId 商品ID
-     * @param isFavorite 是否为收藏
-     * @return 购物车项，如果不存在返回null
-     */
-    Cart findByUserIdAndFruitIdAndIsFavorite(int userId, int fruitId, boolean isFavorite);
-
-    /**
      * 添加商品到购物车
      * @param cart 购物车项
      * @return 受影响的行数
@@ -41,7 +32,7 @@ public interface CartDao {
     int add(Cart cart);
 
     /**
-     * 更新购物车项（修改数量或收藏状态）
+     * 更新购物车项（修改数量）
      * @param cart 购物车项
      * @return 受影响的行数
      */
@@ -56,32 +47,16 @@ public interface CartDao {
     int delete(int userId, int fruitId);
 
     /**
-     * 根据收藏状态删除购物车项
-     * @param userId 用户ID
-     * @param fruitId 商品ID
-     * @param isFavorite 是否为收藏
-     * @return 受影响的行数
-     */
-    int deleteByUserIdFruitIdAndIsFavorite(int userId, int fruitId, boolean isFavorite);
-
-    /**
-     * 清空用户的整个购物车
+     * 清空用户的购物车
      * @param userId 用户ID
      * @return 受影响的行数
      */
     int clearCart(int userId);
 
     /**
-     * 获取用户购物车中的商品数量（不包括收藏）
+     * 获取用户购物车中的商品总数量
      * @param userId 用户ID
      * @return 商品总数
      */
     int getCartCount(int userId);
-
-    /**
-     * 获取用户的收藏列表
-     * @param userId 用户ID
-     * @return 收藏商品列表
-     */
-    List<Cart> getFavorites(int userId);
 }
