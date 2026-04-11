@@ -96,7 +96,7 @@ CREATE TABLE `cart` (
                         `created_at` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '加入时间',
                         `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                         PRIMARY KEY (`id`),
-                        UNIQUE KEY `user_fruit` (`user_id`, `fruit_id`),
+                        UNIQUE KEY `user_fruit_status` (`user_id`, `fruit_id`, `is_favorite`),
                         FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE,
                         FOREIGN KEY (`fruit_id`) REFERENCES `fruits`(`fid`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='统一购物车表（替代原来的shop{id}）';

@@ -25,6 +25,15 @@ public interface CartDao {
     Cart findByUserIdAndFruitId(int userId, int fruitId);
 
     /**
+     * 根据用户ID、商品ID和收藏状态查询购物车项
+     * @param userId 用户ID
+     * @param fruitId 商品ID
+     * @param isFavorite 是否为收藏
+     * @return 购物车项，如果不存在返回null
+     */
+    Cart findByUserIdAndFruitIdAndIsFavorite(int userId, int fruitId, boolean isFavorite);
+
+    /**
      * 添加商品到购物车
      * @param cart 购物车项
      * @return 受影响的行数
@@ -45,6 +54,15 @@ public interface CartDao {
      * @return 受影响的行数
      */
     int delete(int userId, int fruitId);
+
+    /**
+     * 根据收藏状态删除购物车项
+     * @param userId 用户ID
+     * @param fruitId 商品ID
+     * @param isFavorite 是否为收藏
+     * @return 受影响的行数
+     */
+    int deleteByUserIdFruitIdAndIsFavorite(int userId, int fruitId, boolean isFavorite);
 
     /**
      * 清空用户的整个购物车
