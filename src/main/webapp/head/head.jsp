@@ -30,7 +30,18 @@
       <a href="<%= request.getContextPath() %>/showstar.jsp">我的收藏</a>
       <a href="<%= request.getContextPath() %>/showcart.jsp">购物车</a>
       <a href="<%= request.getContextPath() %>/OrderServlet?key=list">我的订单</a>
-      <span>欢迎，<strong><%= user.getUname() %></strong></span>
+      <div class="user-dropdown">
+        <a href="<%= request.getContextPath() %>/UserServlet?key=center" class="user-dropdown-toggle">
+          欢迎，<strong><%= user.getUname() %></strong>
+        </a>
+        <div class="user-dropdown-menu">
+          <a href="<%= request.getContextPath() %>/UserServlet?key=center&tab=info">个人信息记录</a>
+          <a href="<%= request.getContextPath() %>/UserServlet?key=center&tab=payments">支付记录</a>
+          <a href="<%= request.getContextPath() %>/UserServlet?key=center&tab=favorites">收藏商品</a>
+          <a href="<%= request.getContextPath() %>/UserServlet?key=center&tab=address">收货地址管理</a>
+          <a href="<%= request.getContextPath() %>/UserServlet?key=center&tab=password">修改密码</a>
+        </div>
+      </div>
       <% if (user.isAdmin()) { %>
       <a href="<%= request.getContextPath() %>/BSindex.jsp" class="admin-link">⚙ 管理后台</a>
       <% } %>
@@ -107,5 +118,49 @@
 
   .header-menu strong {
     color: #f0ad4e;
+  }
+
+  .user-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .user-dropdown-toggle {
+    display: inline-block;
+    padding: 4px 0;
+  }
+
+  .user-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 170px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    z-index: 999;
+  }
+
+  .header-menu .user-dropdown-menu a {
+    display: block;
+    color: #333;
+    padding: 10px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid #f1f1f1;
+  }
+
+  .header-menu .user-dropdown-menu a:last-child {
+    border-bottom: none;
+  }
+
+  .header-menu .user-dropdown-menu a:hover {
+    background: #f7f7f7;
+    color: #0275d8;
+  }
+
+  .user-dropdown:hover .user-dropdown-menu {
+    display: block;
   }
 </style>

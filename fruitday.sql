@@ -12,6 +12,7 @@ CREATE TABLE `user` (
                         `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
                         `email` varchar(255) NOT NULL UNIQUE COMMENT '邮箱（唯一）',
                         `phone` varchar(20) COMMENT '手机号',
+                        `address` varchar(255) COMMENT '收货地址',
                         `pwd` varchar(255) NOT NULL COMMENT '密码',
                         `uname` varchar(100) COMMENT '用户昵称',
                         `created_at` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -19,8 +20,8 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 INSERT INTO `user` VALUES
-                       (1, 'youwillsee2018@qq.com', '15754326763', 'suhong1', 'youwillsee2018@qq.com', NOW()),
-                       (2, 'test@qq.com', '15812345678', '123456', 'testuser', NOW());
+                       (1, 'youwillsee2018@qq.com', '15754326763', '深圳市南山区科技园1号', 'suhong1', 'youwillsee2018@qq.com', NOW()),
+                       (2, 'test@qq.com', '15812345678', '广州市天河区体育西路100号', '123456', 'testuser', NOW());
 
 -- ========================================
 -- 2. 管理员用户表 (权限标记)

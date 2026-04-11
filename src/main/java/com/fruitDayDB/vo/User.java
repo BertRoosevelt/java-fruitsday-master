@@ -7,6 +7,7 @@ public class User {
     private int id;
     private String email;
     private String phone;
+    private String address;
     private String pwd;
     private String uname;
     private boolean isAdmin;
@@ -49,6 +50,14 @@ public class User {
 
     public void setPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getUname() {
@@ -106,6 +115,7 @@ public class User {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
                 ", pwd='" + pwd + '\'' +
                 ", uname='" + uname + '\'' +
                 '}';
