@@ -1,9 +1,10 @@
-/* Banner */
-.banner{width: 100%;overflow: hidden;position: relative;}
+/* Banner outer wrapper – centres the banner block within the page */
+.banner-wrap{width: 100%;background: #eee;}
+.banner{max-width: 1200px;margin: 0 auto;overflow: hidden;position: relative;}
 .banner .non{display: none;}
 .banner .show{display: block;}
 .banner .show img,.banner .non img{width: 100%;height: 420px;object-fit: cover;display: block;}
-.banner_nav{position: absolute;bottom: 18px;right: 30px;z-index: 10;}
+.banner_nav{position: absolute;bottom: 18px;left: 50%;transform: translateX(-50%);z-index: 10;white-space: nowrap;}
 .banner_nav span{display: inline-block;width: 28px;height: 28px;line-height: 28px;text-align: center;
     background-color: rgba(68,68,68,0.75);color: #fff;cursor: pointer;margin-left: 6px;
     font-size: 12px;border-radius: 50%;transition: background-color 0.3s;}
@@ -33,6 +34,9 @@
 .fruit_name a{color: #333;}
 .fruit_name a:hover{color: #669933;}
 .fruit_num{padding: 2px 10px;font-size: 13px;color: #999;}
-.fruit_mon{padding: 5px 10px 12px;font-size: 19px;color: #e85c2a;font-weight: bold;}
-.flogo{position: absolute;right: 6px;bottom: 6px;opacity: 0.7;}
+
+/* 价格与 logo 同行：价格居左，flogo 居右 */
+.fruit_footer{display: flex;align-items: center;justify-content: space-between;padding: 5px 10px 10px;}
+.fruit_mon{font-size: 19px;color: #e85c2a;font-weight: bold;}
+.flogo{opacity: 0.7;}
 .flogo img{width: 28px;}

@@ -86,8 +86,12 @@ public class ShopServlet extends HttpServlet {
         }
 
         try {
-            int fruitId = Integer.parseInt(req.getParameter("fruitId"));
-            int quantity = Integer.parseInt(req.getParameter("quantity"));
+            String fruitIdParam = req.getParameter("fruitId");
+            if (fruitIdParam == null) fruitIdParam = req.getParameter("fid");
+            int fruitId = Integer.parseInt(fruitIdParam);
+            String quantityParam = req.getParameter("quantity");
+            if (quantityParam == null) quantityParam = "1";
+            int quantity = Integer.parseInt(quantityParam);
 
             // 验证商品是否存在
             Fruit fruit = FruitService.info(fruitId);
@@ -231,7 +235,9 @@ public class ShopServlet extends HttpServlet {
         }
 
         try {
-            int fruitId = Integer.parseInt(req.getParameter("fruitId"));
+            String fruitIdParam = req.getParameter("fruitId");
+            if (fruitIdParam == null) fruitIdParam = req.getParameter("fid");
+            int fruitId = Integer.parseInt(fruitIdParam);
 
             // 验证商品是否存在
             Fruit fruit = FruitService.info(fruitId);
