@@ -252,4 +252,58 @@ public class OrderDaoImpl implements OrderDao {
         order.setRemark(rs.getString("remark"));
         return order;
     }
+
+    /**
+     * 获取所有订单（管理员）
+     */
+    @Override
+    public List<Order> findAll() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT id, user_id, order_number, total_price, status, created_at, " +
+                "paid_at, shipped_at, completed_at, remark FROM orders ORDER BY created_at DESC";
+        try {
+            conn = DBUtils.getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                orders.add(mapResultSetToOrder(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtils.close(rs, ps, conn);
+        }
+        return orders;
+    }
+
+    /**
+     * 获取所有指定状态的订单（管理员）
+     */
+    @Override
+    public List<Order> findAllByStatus(String status) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT id, user_id, order_number, total_price, status, created_at, " +
+                "paid_at, shipped_at, completed_at, remark FROM orders " +
+                "WHERE status = ? ORDER BY created_at DESC";
+        try {
+            conn = DBUtils.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, status);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                orders.add(mapResultSetToOrder(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtils.close(rs, ps, conn);
+        }
+        return orders;
+    }
 }

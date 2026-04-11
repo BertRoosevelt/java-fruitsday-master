@@ -59,4 +59,17 @@ public interface OrderDao {
      * @return 订单列表
      */
     List<Order> findByUserIdAndStatus(int userId, String status);
+
+    /**
+     * 获取所有用户的所有订单（管理员）
+     * @return 订单列表
+     */
+    List<Order> findAll();
+
+    /**
+     * 获取所有用户指定状态的订单（管理员）
+     * @param status 订单状态
+     * @return 订单列表
+     */
+    List<Order> findAllByStatus(String status);
 }

@@ -171,6 +171,7 @@ public class ShopService {
                 detail.setCartId(item.getId());
                 detail.setFruitId(item.getFruitId());
                 detail.setFruitName(fruit.getFname());
+                detail.setSpec(fruit.getSpec());
                 detail.setPrice(fruit.getUp());
                 detail.setQuantity(item.getQuantity());
                 detail.setSubtotal(fruit.getUp() * item.getQuantity());
@@ -202,6 +203,7 @@ public class ShopService {
         private int cartId;
         private int fruitId;
         private String fruitName;
+        private String spec;
         private double price;
         private int quantity;
         private double subtotal;
@@ -216,6 +218,9 @@ public class ShopService {
         public String getFruitName() { return fruitName; }
         public void setFruitName(String fruitName) { this.fruitName = fruitName; }
 
+        public String getSpec() { return spec; }
+        public void setSpec(String spec) { this.spec = spec; }
+
         public double getPrice() { return price; }
         public void setPrice(double price) { this.price = price; }
 
@@ -224,9 +229,6 @@ public class ShopService {
 
         public double getSubtotal() { return subtotal; }
         public void setSubtotal(double subtotal) { this.subtotal = subtotal; }
-
-
-
     }
     /**
      * 根据用户ID和商品ID查询购物车项

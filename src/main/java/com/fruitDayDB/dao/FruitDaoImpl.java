@@ -51,7 +51,8 @@ public class FruitDaoImpl implements FruitDao {
         ResultSet rs = null;
         List<Fruit> hotfruits = new ArrayList<Fruit>();
         Fruit f=null;
-        String sql = "SELECT * FROM hotfruits t1,fruits t2 WHERE t1.fid=t2.fid;";
+        String sql = "SELECT f.fid, f.fname, f.spec, f.up, f.t1, f.t2, f.inum " +
+                     "FROM hot_fruits h JOIN fruits f ON h.fruit_id = f.fid WHERE h.is_hot = 1";
         try{
             conn = DBUtils.getConnection();
             ps = conn.prepareStatement(sql);
@@ -110,7 +111,7 @@ public class FruitDaoImpl implements FruitDao {
     public int add(Fruit fruit) {
         Connection conn = null;
         PreparedStatement ps = null;
-        String sql = "insert into fruits(fname,spec,up,t1,t2,inum,fid)values(?,?,?,?,?,?,?)";
+        String sql = "insert into fruits(fname,spec,up,t1,t2,inum)values(?,?,?,?,?,?)";
         int num=0;
         try{
             conn = DBUtils.getConnection();
@@ -121,7 +122,6 @@ public class FruitDaoImpl implements FruitDao {
             ps.setString(4, fruit.getT1());
             ps.setString(5, fruit.getT2());
             ps.setInt(6, fruit.getInum());
-            ps.setInt(7, fruit.getFid());
             num=ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
@@ -168,6 +168,73 @@ public class FruitDaoImpl implements FruitDao {
         }catch(SQLException e){
             e.printStackTrace();
         }finally{
+            DBUtils.close(null, ps, conn);
+        }
+        return num;
+    }
+
+    public List<Fruit> search(String keyword) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Fruit> fruits = new ArrayList<Fruit>();
+        Fruit f = null;
+        String sql = "SELECT fid, fname, spec, up, t1, t2, inum FROM fruits WHERE fname LIKE ?";
+        try {
+            conn = DBUtils.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + keyword + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                f = new Fruit();
+                f.setFid(rs.getInt("fid"));
+                f.setFname(rs.getString("fname"));
+                f.setSpec(rs.getString("spec"));
+                f.setUp(rs.getDouble("up"));
+                f.setT1(rs.getString("t1"));
+                f.setT2(rs.getString("t2"));
+                f.setInum(rs.getInt("inum"));
+                fruits.add(f);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtils.close(rs, ps, conn);
+        }
+        return fruits;
+    }
+
+    public int setHot(int fid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int num = 0;
+        String sql = "INSERT IGNORE INTO hot_fruits (fruit_id, is_hot) VALUES (?, 1)";
+        try {
+            conn = DBUtils.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, fid);
+            num = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtils.close(null, ps, conn);
+        }
+        return num;
+    }
+
+    public int removeHot(int fid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int num = 0;
+        String sql = "DELETE FROM hot_fruits WHERE fruit_id = ?";
+        try {
+            conn = DBUtils.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, fid);
+            num = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             DBUtils.close(null, ps, conn);
         }
         return num;

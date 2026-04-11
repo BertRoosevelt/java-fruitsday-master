@@ -56,6 +56,7 @@ public class ShopServlet extends HttpServlet {
                 case "favorite":      // 添加到收藏
                     doAddToFavorite(req, resp);
                     break;
+                case "unfavorite":    // 取消收藏
                 case "removeFav":     // 删除收藏
                     doRemoveFavorite(req, resp);
                     break;
