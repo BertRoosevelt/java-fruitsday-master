@@ -19,8 +19,9 @@
     tit1=(String)request.getAttribute("tit1");
 
   String tit2="关注商品";
-  if(request.getAttribute("tit2")!=null)
-    tit2=(String)request.getAttribute("tit2");
+  boolean isFavorite = Boolean.TRUE.equals(request.getAttribute("isFavorite"));
+  if(isFavorite)
+    tit2="已关注";
 %>
 <html>
 <head>
@@ -91,7 +92,7 @@
       xhr.send();
     }
 
-    // 关注商品 - AJAX 异步请求，不导致页面导航（复用当前页面）
+    // 关注商品 - AJAX 异步请求，支持关注/取消关注切换
     function addStar(uid, fid) {
       if (uid === 0 || uid === '0') {
         alert("请先登录后再进行操作！");
@@ -99,11 +100,6 @@
         return;
       }
       var btn = document.getElementById("star");
-      if (btn && btn.disabled) {
-        return;
-      }
-
-      btn.disabled = true;
 
       var xhr = new XMLHttpRequest();
       xhr.open("POST", ctx + "/FruitServlet?key=favorite&fid=" + fid, true);
@@ -114,20 +110,24 @@
             try {
               var data = JSON.parse(xhr.responseText);
               if (data.success) {
-                btn.value = "已关注";
-                btn.style.backgroundColor = "#CCC";
-                btn.style.cursor = "auto";
-                alert(data.message || "已关注");
+                if (data.favorited) {
+                  btn.value = "已关注";
+                  btn.style.backgroundColor = "#CCC";
+                  btn.style.cursor = "pointer";
+                  btn.setAttribute('data-favorited', 'true');
+                } else {
+                  btn.value = "关注商品";
+                  btn.style.backgroundColor = "";
+                  btn.style.cursor = "";
+                  btn.setAttribute('data-favorited', 'false');
+                }
               } else {
-                btn.disabled = false;
                 alert(data.message || "操作失败");
               }
             } catch(e) {
-              btn.disabled = false;
               alert("操作失败，请重试");
             }
           } else {
-            btn.disabled = false;
             alert("操作失败，请重试");
           }
         }
@@ -194,7 +194,8 @@
           <div class="Uadd"><input type="button" name="add" id="cart" value="<%=tit1%>" onclick="addCart(<%=user.getId()%>,<%=fruit.getFid()%>)"
             <%=("已加入购物车".equals(tit1) ? "disabled style=\"background-color:#CCC;cursor:auto;\"" : "")%>/></div>
           <div class="starbutton"><input type="button" name="add" id="star" value="<%=tit2%>" onclick="addStar(<%=user.getId()%>,<%=fruit.getFid()%>)"
-            <%=("已关注".equals(tit2) ? "disabled style=\"background-color:#CCC;cursor:auto;\"" : "")%>/></div>
+            data-favorited="<%=isFavorite%>"
+            <%=(isFavorite ? "style=\"background-color:#CCC;cursor:pointer;\"" : "")%>/></div>
         </div>
       </div>
     </form>
