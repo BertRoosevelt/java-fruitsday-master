@@ -106,7 +106,7 @@
       btn.disabled = true;
 
       var xhr = new XMLHttpRequest();
-      xhr.open("POST", ctx + "/ShopServlet?key=favorite&fid=" + fid, true);
+      xhr.open("POST", ctx + "/FruitServlet?key=favorite&fid=" + fid, true);
       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
