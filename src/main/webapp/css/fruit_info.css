@@ -1,4 +1,9 @@
 /* 商品详情页增强样式 */
+
+/* 图片显示/隐藏切换 */
+.non{display: none;}
+.show{display: block;}
+
 .fruit_info{width: 1100px;margin: 24px auto;display: flex;gap: 20px;align-items: flex-start;}
 
 /* 左侧图片区域 */

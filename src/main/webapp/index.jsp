@@ -29,18 +29,20 @@
     hotFruits = FruitService.hot();
 %>
 
-<div class="banner">
-  <div id="p0" class="show"><a href="http://www.tiantianfruit.com/"><img src="img/index/h0.jpg" alt="天天果园促销活动1"/></a></div>
-  <div id="p1" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h1.jpg" alt="天天果园促销活动2"/></a></div>
-  <div id="p2" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h2.jpg" alt="天天果园促销活动3"/></a></div>
-  <div id="p3" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h3.jpg" alt="天天果园促销活动4"/></a></div>
-  <div id="p4" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h4.jpg" alt="天天果园促销活动5"/></a></div>
-  <div class="banner_nav">
-    <span id="l0" onmouseover="simg('1')" onmouseout="fimg()">1</span>
-    <span id="l1" onmouseover="simg('2')" onmouseout="fimg()">2</span>
-    <span id="l2" onmouseover="simg('3')" onmouseout="fimg()">3</span>
-    <span id="l3" onmouseover="simg('4')" onmouseout="fimg()">4</span>
-    <span id="l4" onmouseover="simg('5')" onmouseout="fimg()">5</span>
+<div class="banner-wrap">
+  <div class="banner">
+    <div id="p0" class="show"><a href="http://www.tiantianfruit.com/"><img src="img/index/h0.jpg" alt="天天果园促销活动1"/></a></div>
+    <div id="p1" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h1.jpg" alt="天天果园促销活动2"/></a></div>
+    <div id="p2" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h2.jpg" alt="天天果园促销活动3"/></a></div>
+    <div id="p3" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h3.jpg" alt="天天果园促销活动4"/></a></div>
+    <div id="p4" class="non"><a href="http://www.tiantianfruit.com/"><img src="img/index/h4.jpg" alt="天天果园促销活动5"/></a></div>
+    <div class="banner_nav">
+      <span id="l0" onmouseover="simg('1')" onmouseout="fimg()">1</span>
+      <span id="l1" onmouseover="simg('2')" onmouseout="fimg()">2</span>
+      <span id="l2" onmouseover="simg('3')" onmouseout="fimg()">3</span>
+      <span id="l3" onmouseover="simg('4')" onmouseout="fimg()">4</span>
+      <span id="l4" onmouseover="simg('5')" onmouseout="fimg()">5</span>
+    </div>
   </div>
 </div>
 
@@ -64,8 +66,10 @@
         <a href="<%= request.getContextPath() %>/FruitServlet?key=info&id=<%= uid %>&fid=<%= fruit.getFid() %>"><%= fruit.getFname() %></a>
       </div>
       <div class="fruit_num"><%= fruit.getSpec() %></div>
-      <div class="fruit_mon">￥<%= fruit.getUp() %></div>
-      <div class="flogo"><img src="img/flogo.png"/></div>
+      <div class="fruit_footer">
+        <div class="fruit_mon">￥<%= fruit.getUp() %></div>
+        <div class="flogo"><img src="img/flogo.png"/></div>
+      </div>
     </div>
     <%
         }
