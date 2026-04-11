@@ -31,20 +31,17 @@ public class OrderService {
         OrderDao orderDao = new OrderDaoImpl();
         OrderItemDao orderItemDao = new OrderItemDaoImpl();
 
-        // 获取购物车中的所有商品
+        // 获取购物车中的所有商品（cart 表中全部都是购物车商品，不再包含收藏）
         List<Cart> cartItems = cartDao.findByUserId(userId);
         List<Cart> itemsToOrder = new ArrayList<>();
         double totalPrice = 0;
 
-        // 筛选出购物车中的商品（非收藏）
         for (Cart item : cartItems) {
-            if (!item.isFavorite()) {
-                itemsToOrder.add(item);
-                // 计算总价
-                Fruit fruit = FruitService.info(item.getFruitId());
-                if (fruit != null) {
-                    totalPrice += fruit.getUp() * item.getQuantity();
-                }
+            itemsToOrder.add(item);
+            // 计算总价
+            Fruit fruit = FruitService.info(item.getFruitId());
+            if (fruit != null) {
+                totalPrice += fruit.getUp() * item.getQuantity();
             }
         }
 

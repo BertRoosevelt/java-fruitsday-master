@@ -2,7 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.fruitDayDB.vo.User" %>
-<%@ page import="com.fruitDayDB.service.ShopService" %>
+<%@ page import="com.fruitDayDB.vo.Favorite" %>
+<%@ page import="com.fruitDayDB.service.FavoriteService" %>
 <%--
 我的收藏页面
 --%>
@@ -42,7 +43,7 @@
   </div>
 
   <%
-    List<com.fruitDayDB.vo.Cart> favorites = ShopService.getFavorites(user.getId());
+    List<Favorite> favorites = FavoriteService.getFavorites(user.getId());
   %>
 
   <% if (favorites == null || favorites.isEmpty()) { %>
@@ -63,8 +64,8 @@
     </thead>
     <tbody>
     <%
-      for (com.fruitDayDB.vo.Cart cart : favorites) {
-        com.fruitDayDB.vo.Fruit fruit = com.fruitDayDB.service.FruitService.info(cart.getFruitId());
+      for (Favorite fav : favorites) {
+        com.fruitDayDB.vo.Fruit fruit = com.fruitDayDB.service.FruitService.info(fav.getFruitId());
         if (fruit == null) continue;
     %>
     <tr>

@@ -84,31 +84,49 @@ INSERT INTO `hot_fruits` (fruit_id, is_hot) VALUES
                                                 (1, 1), (3, 1), (4, 1), (8, 1), (9, 1), (10, 1), (11, 1), (14, 1), (16, 1), (20, 1);
 
 -- ========================================
--- 5. 购物车表 (新设计！用一张表替代shop{id})
+-- 5. 购物车表（仅用于购物车，收藏功能已迁移到独立的 favorites 表）
 -- ========================================
+DROP TABLE IF EXISTS `favorites`;
 DROP TABLE IF EXISTS `cart`;
 CREATE TABLE `cart` (
                         `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '购物车项ID',
                         `user_id` int(11) NOT NULL COMMENT '用户ID',
                         `fruit_id` int(11) NOT NULL COMMENT '商品ID',
                         `quantity` int(11) DEFAULT 1 COMMENT '购买数量',
-                        `is_favorite` tinyint(1) DEFAULT 0 COMMENT '是否收藏',
                         `created_at` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '加入时间',
                         `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                         PRIMARY KEY (`id`),
-                        UNIQUE KEY `user_fruit_status` (`user_id`, `fruit_id`, `is_favorite`),
+                        UNIQUE KEY `user_fruit` (`user_id`, `fruit_id`),
                         FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE,
                         FOREIGN KEY (`fruit_id`) REFERENCES `fruits`(`fid`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='统一购物车表（替代原来的shop{id}）';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='购物车表';
 
 -- 初始数据（用户1的购物车）
 INSERT INTO `cart` VALUES
-                       (1, 1, 1, 2, 1, NOW(), NOW()),
-                       (2, 1, 11, 1, 1, NOW(), NOW()),
-                       (3, 1, 14, 3, 0, NOW(), NOW());
+                       (1, 1, 14, 3, NOW(), NOW());
 
 -- ========================================
--- 6. 订单表 (新增！实现订单功能)
+-- 6. 收藏表（独立于购物车，完全分离）
+-- ========================================
+DROP TABLE IF EXISTS `favorites`;
+CREATE TABLE `favorites` (
+                             `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '收藏ID',
+                             `user_id` int(11) NOT NULL COMMENT '用户ID',
+                             `fruit_id` int(11) NOT NULL COMMENT '商品ID',
+                             `created_at` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '收藏时间',
+                             PRIMARY KEY (`id`),
+                             UNIQUE KEY `unique_user_fruit` (`user_id`, `fruit_id`),
+                             FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE,
+                             FOREIGN KEY (`fruit_id`) REFERENCES `fruits`(`fid`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='收藏表（独立）';
+
+-- 初始数据（用户1的收藏）
+INSERT INTO `favorites` (user_id, fruit_id) VALUES
+                                                (1, 1),
+                                                (1, 11);
+
+-- ========================================
+-- 7. 订单表 (新增！实现订单功能)
 -- ========================================
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
@@ -129,7 +147,7 @@ CREATE TABLE `orders` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='订单表';
 
 -- ========================================
--- 7. 订单项表 (新增！记录订单中的商品)
+-- 8. 订单项表 (新增！记录订单中的商品)
 -- ========================================
 DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE `order_items` (
@@ -147,7 +165,7 @@ CREATE TABLE `order_items` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='订单项表';
 
 -- ========================================
--- 8. 删除旧的 shop 表
+-- 9. 删除旧的 shop 表
 -- ========================================
 DROP TABLE IF EXISTS `shop1`;
 DROP TABLE IF EXISTS `shop12`;

@@ -1,26 +1,24 @@
 package com.fruitDayDB.vo;
 
 /**
- * 购物车对象
- * 代表用户购物车中的一项商品（收藏功能已迁移到独立的 Favorite 对象）
+ * 收藏对象
+ * 代表用户收藏的一件商品（独立于购物车）
  */
-public class Cart {
-    private int id;           // 购物车项ID
+public class Favorite {
+    private int id;           // 收藏ID
     private int userId;       // 用户ID
     private int fruitId;      // 商品ID
-    private int quantity;     // 购买数量
-    private String createdAt; // 创建时间
+    private String createdAt; // 收藏时间
 
-    public Cart() {
+    public Favorite() {
         super();
     }
 
-    public Cart(int fruitId, int quantity) {
+    public Favorite(int userId, int fruitId) {
+        this.userId = userId;
         this.fruitId = fruitId;
-        this.quantity = quantity;
     }
 
-    // 所有 getter 和 setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -30,19 +28,15 @@ public class Cart {
     public int getFruitId() { return fruitId; }
     public void setFruitId(int fruitId) { this.fruitId = fruitId; }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
-
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
 
     @Override
     public String toString() {
-        return "Cart{" +
+        return "Favorite{" +
                 "id=" + id +
                 ", userId=" + userId +
                 ", fruitId=" + fruitId +
-                ", quantity=" + quantity +
                 ", createdAt='" + createdAt + '\'' +
                 '}';
     }
