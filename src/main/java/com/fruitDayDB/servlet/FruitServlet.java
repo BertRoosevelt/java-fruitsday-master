@@ -71,8 +71,12 @@ public class FruitServlet extends HttpServlet {
             if (user != null) {
                 // 用户已登录，检查是否收藏
                 Cart cart = ShopService.find(user.getId(), fruitId);
-                req.setAttribute("isFavorite", cart != null && cart.isFavorite());
-                req.setAttribute("inCart", cart != null && !cart.isFavorite());
+                boolean isFavorite = cart != null && cart.isFavorite();
+                boolean inCart = cart != null && !cart.isFavorite();
+                req.setAttribute("isFavorite", isFavorite);
+                req.setAttribute("inCart", inCart);
+                if (inCart) req.setAttribute("tit1", "已加入购物车");
+                if (isFavorite) req.setAttribute("tit2", "已关注");
             }
 
             req.setAttribute("fruit", fruit);
