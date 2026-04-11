@@ -1,8 +1,6 @@
 <%@ page import="com.fruitDayDB.vo.User" %>
 <%@ page import="com.fruitDayDB.vo.Order" %>
 <%@ page import="com.fruitDayDB.vo.Favorite" %>
-<%@ page import="com.fruitDayDB.vo.Fruit" %>
-<%@ page import="com.fruitDayDB.service.FruitService" %>
 <%@ page import="com.fruitDayDB.service.OrderService" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -125,20 +123,17 @@
         <table class="uc-table">
             <thead>
             <tr>
-                <th>商品</th>
-                <th>价格</th>
+                <th>商品ID</th>
                 <th>收藏时间</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
-            <% for (Favorite favorite : favorites) {
-                Fruit fruit = FruitService.info(favorite.getFruitId());
-                if (fruit == null) continue;
-            %>
+            <% for (Favorite favorite : favorites) { %>
             <tr>
-                <td><a href="<%= request.getContextPath() %>/FruitServlet?key=info&fid=<%= fruit.getFid() %>"><%= fruit.getFname() %></a></td>
-                <td>¥<%= String.format("%.2f", fruit.getUp()) %></td>
+                <td><%= favorite.getFruitId() %></td>
                 <td><%= favorite.getCreatedAt() %></td>
+                <td><a href="<%= request.getContextPath() %>/FruitServlet?key=info&fid=<%= favorite.getFruitId() %>">查看商品</a></td>
             </tr>
             <% } %>
             </tbody>
