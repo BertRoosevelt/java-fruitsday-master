@@ -203,7 +203,7 @@
     %>
     <tr>
       <td class="cart-item-name"><%= item.getFruitName() %></td>
-      <td><%= item.getFruitName() %></td>
+      <td><%= item.getSpec() != null ? item.getSpec() : "-" %></td>
       <td class="cart-item-price">¥<%= String.format("%.2f", item.getPrice()) %></td>
       <td>
         <form method="POST" action="<%= request.getContextPath() %>/ShopServlet?key=updateQty" style="display:inline;">
@@ -226,7 +226,7 @@
   </table>
 
   <div class="cart-summary">
-    <div>购物车���有 <strong><%= cartCount %></strong> 件商品</div>
+    <div>购物车共有 <strong><%= cartCount %></strong> 件商品</div>
     <div class="total-price">合计：¥<%= String.format("%.2f", cartTotal) %></div>
   </div>
 

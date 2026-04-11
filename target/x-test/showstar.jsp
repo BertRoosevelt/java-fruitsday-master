@@ -2,93 +2,102 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.fruitDayDB.vo.User" %>
+<%@ page import="com.fruitDayDB.service.ShopService" %>
 <%--
-  Created by IntelliJ IDEA.
-  User: xi
-  Date: 2015/10/3
-  Time: 21:04
-  To change this template use File | Settings | File Templates.
+我的收藏页面
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    User user = (User) session.getAttribute("user");
+    if (user == null) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        return;
+    }
+%>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>我的关注</title>
-  <link rel="stylesheet" href="css/showcart.css" />
+  <title>我的收藏 - 天天果园</title>
   <link rel="stylesheet" type="text/css" href="css/main.css"/>
-  <script src="js/imgs.js" type="text/javascript" charset="utf-8"></script>
-
-  <script>
-    window.onload=function footer_img_non(){
-      document.getElementById("footer_img").style.display="none";
-    }
-  </script>
-  <%
-    List<Fruit> fruits=(List<Fruit>)request.getAttribute("fruits");
-    User user=(User)session.getAttribute("user");
-  %>
+  <style>
+    .fav-container { max-width: 1000px; margin: 20px auto; }
+    .fav-header { background:#f5f5f5; padding:15px; margin-bottom:20px; border-radius:5px; }
+    .fav-table { width:100%; border-collapse:collapse; background:#fff; border-radius:5px; box-shadow:0 2px 8px rgba(0,0,0,0.07); }
+    .fav-table th { background:#f8f9fa; padding:12px 15px; text-align:left; border-bottom:2px solid #dee2e6; font-size:13px; }
+    .fav-table td { padding:14px 15px; border-bottom:1px solid #f0f0f0; }
+    .fav-table tr:hover td { background:#f8f9fb; }
+    .btn { display:inline-block; padding:6px 14px; border:none; border-radius:4px; cursor:pointer; font-size:13px; text-decoration:none; }
+    .btn-primary { background:#3498db; color:#fff; }
+    .btn-danger { background:#e74c3c; color:#fff; }
+    .empty { text-align:center; padding:50px; color:#666; }
+  </style>
 </head>
-<body onload="money()">
-<div class="con">
-  <div class="head">
-    <a href="index.jsp">
-      <img src="img/logo_login.png" alt="" />
-    </a>
+<body>
+<jsp:include page="head/head.jsp"></jsp:include>
+
+<div class="fav-container">
+  <div class="fav-header">
+    <h2>⭐ 我的收藏</h2>
   </div>
-  <div class="shop_box">
-    <div class="head_text_box">
-					<span id="head_text">
-						我的关注
-					</span>
-    </div>
 
-    <div class="shop_title">
-      <div id="st1">商品</div>
-      <div id="st2">规格</div>
-      <div id="st3">单价</div>
-      <div id="st4">数量</div>
-      <div id="st5">小计</div>
-      <div id="st6">操作</div>
-    </div>
+  <%
+    List<com.fruitDayDB.vo.Cart> favorites = ShopService.getFavorites(user.getId());
+  %>
 
+  <% if (favorites == null || favorites.isEmpty()) { %>
+  <div class="empty">
+    <div style="font-size:48px; margin-bottom:16px;">⭐</div>
+    <h3>收藏夹是空的</h3>
+    <p>快去挑选你喜欢的水果吧！</p>
+    <a href="<%= request.getContextPath() %>/index.jsp" class="btn btn-primary">返回首页</a>
+  </div>
+  <% } else { %>
+  <table class="fav-table">
+    <thead>
+    <tr>
+      <th>商品</th>
+      <th>商品ID</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
     <%
-      for(Fruit fruit:fruits)
-      {
-        out.print("    <div class=\"shop\">\n" +
-                "      <div class=\"s1\">\n" +
-                "        <div class=\"s1_img\"><a href=\"/FruitServlet?key=info&id="+user.getId()+"&fid="+fruit.getFid()+"\"><img src=\"img/fruits/"+fruit.getFid()+"/(1).jpg\" /></a></div>\n" +
-                "        <div class=\"s1_text\"><a href=\"/FruitServlet?key=info&id="+user.getId()+"&fid="+fruit.getFid()+"\">"+fruit.getFname()+"</a></div>\n" +
-                "      </div>\n" +
-                "\n" +
-                "      <div class=\"s2\">\n" +
-                "        "+fruit.getSpec()+"\n" +
-                "      </div>\n" +
-                "\n" +
-                "      <div class=\"s3\">\n" +
-                "        ￥<span id=\"up"+fruit.getFid()+"\">"+fruit.getUp()+"</span>\n" +
-                "      </div>\n" +
-                "\n" +
-                "      <div class=\"s4\">\n" +
-                "     <div class=\"Unum\"><span id=\"numl\" class=\"numl\" onclick=\"number(1,"+fruit.getFid()+");sum("+fruit.getFid()+");money()\">-</span><span id=\"num"+fruit.getFid()+"\">1</span><span id=\"numr\" class=\"numr\" onclick=\"number(0,"+fruit.getFid()+");sum("+fruit.getFid()+");money()\">+</span></div>\n" +
-                "      </div>\n" +
-                "\n" +
-                "      <div class=\"s5\">\n" +
-                "        ￥<span id=\"sum"+fruit.getFid()+"\" class=\"fsum\">"+fruit.getUp()+"</span>\n" +
-                "      </div>\n" +
-                "\n" +
-                "      <div class=\"s6\">\n" +
-                "        <a href=\"/x-test/ShopServlet?key=del&uid="+user.getId()+"&fid="+fruit.getFid()+"&str=star\">删除</a>\n" +
-                "      </div>\n" +
-                "    </div>");
+      for (com.fruitDayDB.vo.Cart cart : favorites) {
+        com.fruitDayDB.vo.Fruit fruit = com.fruitDayDB.service.FruitService.info(cart.getFruitId());
+        if (fruit == null) continue;
+    %>
+    <tr>
+      <td>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <img src="img/fruits/<%= fruit.getFid() %>/(1).jpg"
+               style="width:50px; height:50px; object-fit:cover; border-radius:4px;"
+               alt="<%= fruit.getFname() %>"/>
+          <div>
+            <a href="<%= request.getContextPath() %>/FruitServlet?key=info&fid=<%= fruit.getFid() %>"
+               style="color:#333; font-weight:bold; text-decoration:none;"><%= fruit.getFname() %></a>
+            <div style="color:#7f8c8d; font-size:13px;"><%= fruit.getSpec() %></div>
+            <div style="color:#e74c3c; font-weight:bold;">¥<%= String.format("%.2f", fruit.getUp()) %></div>
+          </div>
+        </div>
+      </td>
+      <td><%= fruit.getFid() %></td>
+      <td>
+        <a href="<%= request.getContextPath() %>/FruitServlet?key=info&fid=<%= fruit.getFid() %>"
+           class="btn btn-primary">查看</a>
+        <a href="<%= request.getContextPath() %>/ShopServlet?key=unfavorite&fruitId=<%= fruit.getFid() %>"
+           class="btn btn-danger"
+           onclick="return confirm('确定要取消收藏？')">取消收藏</a>
+      </td>
+    </tr>
+    <%
       }
     %>
-
-    <div class="shop_footer">
-      &nbsp;
-    </div>
-  </div>
-
+    </tbody>
+  </table>
+  <% } %>
 </div>
+
 <jsp:include page="footer/footer.jsp"></jsp:include>
 </body>
 </html>

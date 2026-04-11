@@ -1,98 +1,66 @@
 <%@ page import="com.fruitDayDB.vo.User" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
 <%--
-  Created by IntelliJ IDEA.
-  User: xi
-  Date: 2015/10/18
-  Time: 9:15
-  To change this template use File | Settings | File Templates.
+后台 - 新增商品
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    User adminUser = (User) session.getAttribute("user");
+    if (adminUser == null || !adminUser.isAdmin()) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
-
-  <meta charset="utf-8" />
-  <title></title>
-  <link rel="stylesheet" type="text/css" href="css/BSindex.css"/>
-  <link rel="stylesheet" type="text/css" href="css/main.css"/>
-  <script src="js/BSindex.js" type="text/javascript" charset="utf-8"></script>
-  <%
-    String show="x0";
-    if(request.getAttribute("sky")!=null)
-      show=(String)request.getAttribute("sky");
-  %>
+  <meta charset="utf-8"/>
+  <title>新增商品 - 天天果园后台</title>
 </head>
-<body >
-<div class="mean">
-  <div class="logo">
-    <a href="index.jsp"><img src="img/alogo.png" alt="" /></a>
+<body>
+<jsp:include page="admin/sidebar.jsp"><jsp:param name="active" value="fruits"/></jsp:include>
+
+<div class="admin-main">
+  <div class="admin-topbar">
+    <h2>➕ 新增商品</h2>
+    <a href="<%= request.getContextPath() %>/BSServlet?key=allfruit" class="btn btn-secondary">← 返回列表</a>
   </div>
-
-  <div class="mean_ul">
-    <div class="mean_li" onclick="sss('u')">用户管理</div>
-    <div class="user_list" id="user_list">
-      <div class="mm"><a href="/x-test/BSServlet?key=alluser">全部用户</a></div>
-      <div class="mm"><a href="BSindex2.jsp">添加用户</a></div>
-    </div>
-    <div class="mean_li" onclick="sss('f')">商品管理</div>
-    <div class="fruit_list" id="fruit_list">
-      <div class="mm"><a href="/x-test/BSServlet?key=allfruit">库存水果</a></div>
-      <div class="mm"><a href="/x-test/BSServlet?key=hotfruit">热卖水果</a></div>
-      <div class="mm"><a href="BSindex5.jsp">水果入库</a></div>
-    </div>
-  </div>
-
-</div>
-
-<div class="gong" id="x5">
-  <div class="con">
-    <div class="form" style="margin-top: 40px;">
-      <form action="/x-test/BSServlet?key=addfruit" method="post">
-        <div class="add">
-          <span class="add_tit">玩具编号 ：</span>
-          <span class="add_text"><input type="text" name="fid" id="fid" value="" /></span>
+  <div class="admin-body">
+    <div class="card" style="max-width:600px;">
+      <div class="card-title">填写商品信息</div>
+      <form action="<%= request.getContextPath() %>/BSServlet?key=addfruit" method="post">
+        <div class="form-group">
+          <label>商品名称 <span style="color:red">*</span></label>
+          <input type="text" name="fname" class="form-control" placeholder="例如：佳沛新西兰绿奇异果" required/>
         </div>
-        <div class="add">
-          <span class="add_tit">玩具 ：</span>
-          <span class="add_text"><input type="text" name="fname" id="fname1" value="" /></span>
+        <div class="form-group">
+          <label>规格 <span style="color:red">*</span></label>
+          <input type="text" name="spec" class="form-control" placeholder="例如：4+2盒" required/>
         </div>
-
-        <div class="add">
-          <span class="add_tit">规格 ：</span>
-          <span class="add_text"><input type="text" name="spec" id="spec1" value="" /></span>
+        <div class="form-group">
+          <label>单价（元） <span style="color:red">*</span></label>
+          <input type="number" name="up" class="form-control" step="0.01" min="0.01" placeholder="例如：78.00" required/>
         </div>
-
-        <div class="add">
-          <span class="add_tit">单价 ：</span>
-          <span class="add_text"><input type="text" name="up" id="up1" value="" /></span>
+        <div class="form-group">
+          <label>商品简介（产地信息）</label>
+          <input type="text" name="t1" class="form-control" placeholder="例如：产地 新西兰 销售规格 6个"/>
         </div>
-
-        <div class="add">
-          <span class="add_tit" >商品简介 ：</span>
-          <span class="add_text"><input type="text" class="long" name="t1" id="t11" value="" /></span>
+        <div class="form-group">
+          <label>温馨提示（储藏信息）</label>
+          <input type="text" name="t2" class="form-control" placeholder="例如：储藏方法 0-4度冷藏"/>
         </div>
-
-        <div class="add">
-          <span class="add_tit">温馨提示 ：</span>
-          <span class="add_text"><input type="text" class="long" name="t2" id="t21" value="" /></span>
+        <div class="form-group">
+          <label>图片数量</label>
+          <input type="number" name="inum" class="form-control" value="1" min="1" max="99"/>
+          <small style="color:#7f8c8d; font-size:12px;">对应 img/fruits/{fid}/(1).jpg 等图片文件</small>
         </div>
-
-        <div class="add">
-          <span class="add_tit">图片个数 ：</span>
-          <span class="add_text"><input type="text" name="inum" id="inum1" value="" /></span>
-        </div>
-
-        <div class="add_sublmit">
-          <input type="submit" value="添加"/>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button type="submit" class="btn btn-success">✓ 新增商品</button>
+          <a href="<%= request.getContextPath() %>/BSServlet?key=allfruit" class="btn btn-secondary">取消</a>
         </div>
       </form>
     </div>
   </div>
 </div>
-
-
+</div>
 </body>
 </html>
-

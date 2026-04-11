@@ -12,13 +12,15 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>水果信息</title>
-  <link rel="stylesheet" type="text/css" href="css/imgs.css"/>
+  <title>水果信息 - 天天果园</title>
+  <link rel="stylesheet" type="text/css" href="css/fruit_info.css"/>
   <link rel="stylesheet" type="text/css" href="css/main.css"/>
   <script src="js/imgs.js" type="text/javascript" charset="utf-8"></script>
+  <script>var ctx = '<%= request.getContextPath() %>';</script>
   <%
     Fruit fruit=(Fruit)request.getAttribute("fruit");
     List<Fruit> hotFruits=(List<Fruit>)request.getAttribute("fruits");
+    if (hotFruits == null) hotFruits = new java.util.ArrayList<>();
     User user=new User(0);
     if(session.getAttribute("user")!=null)
        user=(User)session.getAttribute("user");
@@ -39,7 +41,9 @@
   <div class="img_box">
     <%
       String cname="show";
-      for(int i=1;i<fruit.getInum()+1;i++)
+      int imgCount = Math.min(fruit.getInum(), 3);
+      if (imgCount < 1) imgCount = 1;
+      for(int i=1;i<=imgCount;i++)
       {
         out.println("<div id=\"p"+(i-1)+"\" class=\"" + cname + "\"><img src=\"img/fruits/" + fruit.getFid() + "/(" + i + ").jpg\" /></div>");
         cname="non";
@@ -49,7 +53,7 @@
     <div class="img_to">
       <ul >
         <%
-          for(int i=1;i<fruit.getInum()+1;i++)
+          for(int i=1;i<=imgCount;i++)
           {
             out.print("<li><img src=\"img/fruits/"+fruit.getFid()+"/("+i+").jpg\" id=\"s"+(i-1)+"\" onMouseMove=\"himg(this.id)\"/></li>");
           }
@@ -79,8 +83,10 @@
       </div>
       <div class="Unum"><span id="numl" onclick="number(1,<%=fruit.getFid()%>)">-</span><span id="num<%=fruit.getFid()%>">1</span><span id="numr" onclick="number(0,<%=fruit.getFid()%>)">+</span></div>
       </div>
+          <div class="btn-row">
           <div class="Uadd"><input type="button" name="add" id="cart" value="<%=tit1%>" onclick="addCart(<%=user.getId()%>,<%=fruit.getFid()%>)" /></div>
           <div class="starbutton"><input type="button" name="add" id="star" value="<%=tit2%>" onclick="addStar(<%=user.getId()%>,<%=fruit.getFid()%>)"/></div>
+          </div>
       </div>
     </form>
 
