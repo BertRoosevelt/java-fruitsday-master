@@ -39,7 +39,7 @@ public class UserDaoImpl implements UserDao {
     public int add(User u) {
         Connection conn = null;
         PreparedStatement ps = null;
-        String sql = "insert into user(email,phone,pwd,uname)values(?,?,?,?)";
+        String sql = "insert into user(email,phone,pwd,uname,address)values(?,?,?,?,?)";
         int num=0;
         try{
             conn = DBUtils.getConnection();
@@ -48,6 +48,7 @@ public class UserDaoImpl implements UserDao {
             ps.setString(2, u.getPhone());
             ps.setString(3, u.getPwd());
             ps.setString(4,u.getUname());
+            ps.setString(5,u.getAddress());
             num=ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
@@ -66,13 +67,13 @@ public class UserDaoImpl implements UserDao {
         User u = null;
         String sql="";
         if(boo)
-            sql = "select u.id,u.email,u.phone,u.pwd,u.uname, " +
+            sql = "select u.id,u.email,u.phone,u.address,u.pwd,u.uname, " +
                   "(SELECT COUNT(*) FROM admin a WHERE a.user_id=u.id) as is_admin " +
                   "from user u where u.email=?";
         else
-            sql = "select u.id,u.email,u.phone,u.pwd,u.uname, " +
-                  "(SELECT COUNT(*) FROM admin a WHERE a.user_id=u.id) as is_admin " +
-                  "from user u where u.phone=?";
+            sql = "select u.id,u.email,u.phone,u.address,u.pwd,u.uname, " +
+                   "(SELECT COUNT(*) FROM admin a WHERE a.user_id=u.id) as is_admin " +
+                   "from user u where u.phone=?";
 
         try{
             conn = DBUtils.getConnection();
@@ -84,6 +85,7 @@ public class UserDaoImpl implements UserDao {
                 u.setId(rs.getInt("id"));
                 u.setEmail(rs.getString("email"));
                 u.setPhone(rs.getString("phone"));
+                u.setAddress(rs.getString("address"));
                 u.setPwd(rs.getString("pwd"));
                 u.setUname(rs.getString("uname"));
                 u.setIsAdmin(rs.getInt("is_admin") > 0);
@@ -108,7 +110,7 @@ public class UserDaoImpl implements UserDao {
             ps = conn.prepareStatement(sql);
             ps.setString(1,u.getPwd());
             ps.setInt(2, u.getId());
-            ps.executeUpdate();
+            num = ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
         }finally{
@@ -125,16 +127,17 @@ public class UserDaoImpl implements UserDao {
         Connection conn = null;
         PreparedStatement ps = null;
         int num=0;
-        String sql = "UPDATE user SET email=? ,phone=? ,uname=?,pwd=? WHERE id=?;";
+        String sql = "UPDATE user SET email=? ,phone=? ,uname=?,address=?,pwd=? WHERE id=?;";
         try{
             conn = DBUtils.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1,u.getEmail());
             ps.setString(2, u.getPhone());
             ps.setString(3,u.getUname());
-            ps.setString(4,u.getPwd());
-            ps.setInt(5, u.getId());
-            ps.executeUpdate();
+            ps.setString(4,u.getAddress());
+            ps.setString(5,u.getPwd());
+            ps.setInt(6, u.getId());
+            num = ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
         }finally{
@@ -153,7 +156,7 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         User u = null;
-        String sql = "select email,phone,uname from user where id=?";
+        String sql = "select email,phone,uname,address from user where id=?";
         try{
             conn = DBUtils.getConnection();
             ps = conn.prepareStatement(sql);
@@ -164,6 +167,7 @@ public class UserDaoImpl implements UserDao {
                 u.setId(id);
                 u.setEmail(rs.getString("email"));
                 u.setPhone(rs.getString("phone"));
+                u.setAddress(rs.getString("address"));
                 u.setPwd("******");
                 u.setUname(rs.getString("uname"));
             }
@@ -185,7 +189,7 @@ public class UserDaoImpl implements UserDao {
         ResultSet rs = null;
         User u=null;
         List<User> users = new ArrayList<User>();
-        String sql = "select id,email,phone,uname from user";
+        String sql = "select id,email,phone,uname,address from user";
         try{
             conn = DBUtils.getConnection();
             ps = conn.prepareStatement(sql);
@@ -195,6 +199,7 @@ public class UserDaoImpl implements UserDao {
                 u.setId(rs.getInt("id"));
                 u.setEmail(rs.getString("email"));
                 u.setPhone(rs.getString("phone"));
+                u.setAddress(rs.getString("address"));
                 u.setPwd("******");
                 u.setUname(rs.getString("uname"));
                 users.add(u);

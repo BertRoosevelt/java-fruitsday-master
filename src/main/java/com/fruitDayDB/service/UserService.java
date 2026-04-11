@@ -103,6 +103,21 @@ public class UserService {
     }
 
     /**
+     * 修改用户密码
+     * @param userId 用户ID
+     * @param newPwd 新密码
+     * @return 成功返回 true，失败返回 false
+     */
+    public static boolean updatePassword(int userId, String newPwd) {
+        UserDao userDao = new UserDaoImpl();
+        User user = new User();
+        user.setId(userId);
+        user.setPwd(newPwd);
+        int num = userDao.upPwd(user);
+        return num == 1;
+    }
+
+    /**
      * 根据 ID 查询用户
      * @param id 用户 ID
      * @return 用户对象
