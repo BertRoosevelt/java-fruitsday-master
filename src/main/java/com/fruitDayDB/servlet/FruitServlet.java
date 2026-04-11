@@ -69,10 +69,9 @@ public class FruitServlet extends HttpServlet {
             com.fruitDayDB.vo.User user = (com.fruitDayDB.vo.User) session.getAttribute("user");
 
             if (user != null) {
-                // 用户已登录，检查是否收藏
-                Cart cart = ShopService.find(user.getId(), fruitId);
-                boolean isFavorite = cart != null && cart.isFavorite();
-                boolean inCart = cart != null && !cart.isFavorite();
+                // 分别查询购物车状态（is_favorite=false）和收藏状态（is_favorite=true），两者完全独立
+                boolean inCart = ShopService.findInCart(user.getId(), fruitId) != null;
+                boolean isFavorite = ShopService.findInFavorites(user.getId(), fruitId) != null;
                 req.setAttribute("isFavorite", isFavorite);
                 req.setAttribute("inCart", inCart);
                 if (inCart) req.setAttribute("tit1", "已加入购物车");

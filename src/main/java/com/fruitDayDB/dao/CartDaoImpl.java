@@ -92,8 +92,47 @@ public class CartDaoImpl implements CartDao {
     }
 
     /**
+     * 根据用户ID、商品ID和收藏状态查询购物车项
+     */
+    @Override
+    public Cart findByUserIdAndFruitIdAndIsFavorite(int userId, int fruitId, boolean isFavorite) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Cart cart = null;
+
+        String sql = "SELECT id, user_id, fruit_id, quantity, is_favorite, created_at " +
+                "FROM cart WHERE user_id = ? AND fruit_id = ? AND is_favorite = ?";
+
+        try {
+            conn = DBUtils.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, fruitId);
+            ps.setBoolean(3, isFavorite);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                cart = new Cart();
+                cart.setId(rs.getInt("id"));
+                cart.setUserId(rs.getInt("user_id"));
+                cart.setFruitId(rs.getInt("fruit_id"));
+                cart.setQuantity(rs.getInt("quantity"));
+                cart.setIsFavorite(rs.getBoolean("is_favorite"));
+                cart.setCreatedAt(rs.getString("created_at"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtils.close(rs, ps, conn);
+        }
+
+        return cart;
+    }
+
+    /**
      * 添加商品到购物车
-     * 如果商品已存在，则增加数量；否则创建新记录
+     * 如果该类型（购物车或收藏）已存在同一商品，则增加数量；否则创建新记录
      */
     @Override
     public int add(Cart cart) {
@@ -101,18 +140,19 @@ public class CartDaoImpl implements CartDao {
         PreparedStatement ps = null;
         int result = 0;
 
-        // 先检查是否存在
-        Cart existing = findByUserIdAndFruitId(cart.getUserId(), cart.getFruitId());
+        // 按 is_favorite 状态查找，只匹配相同类型的记录
+        Cart existing = findByUserIdAndFruitIdAndIsFavorite(cart.getUserId(), cart.getFruitId(), cart.isFavorite());
 
         if (existing != null) {
-            // 存在则更新数量
-            String sql = "UPDATE cart SET quantity = quantity + ? WHERE user_id = ? AND fruit_id = ?";
+            // 同类型记录已存在，则更新数量
+            String sql = "UPDATE cart SET quantity = quantity + ? WHERE user_id = ? AND fruit_id = ? AND is_favorite = ?";
             try {
                 conn = DBUtils.getConnection();
                 ps = conn.prepareStatement(sql);
                 ps.setInt(1, cart.getQuantity());
                 ps.setInt(2, cart.getUserId());
                 ps.setInt(3, cart.getFruitId());
+                ps.setBoolean(4, cart.isFavorite());
                 result = ps.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -141,7 +181,7 @@ public class CartDaoImpl implements CartDao {
     }
 
     /**
-     * 更新购物车项（修改数量或收藏状态）
+     * 更新购物车项（修改数量）
      */
     @Override
     public int update(Cart cart) {
@@ -149,15 +189,15 @@ public class CartDaoImpl implements CartDao {
         PreparedStatement ps = null;
         int result = 0;
 
-        String sql = "UPDATE cart SET quantity = ?, is_favorite = ? WHERE user_id = ? AND fruit_id = ?";
+        String sql = "UPDATE cart SET quantity = ? WHERE user_id = ? AND fruit_id = ? AND is_favorite = ?";
 
         try {
             conn = DBUtils.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setInt(1, cart.getQuantity());
-            ps.setBoolean(2, cart.isFavorite());
-            ps.setInt(3, cart.getUserId());
-            ps.setInt(4, cart.getFruitId());
+            ps.setInt(2, cart.getUserId());
+            ps.setInt(3, cart.getFruitId());
+            ps.setBoolean(4, cart.isFavorite());
             result = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -184,6 +224,33 @@ public class CartDaoImpl implements CartDao {
             ps = conn.prepareStatement(sql);
             ps.setInt(1, userId);
             ps.setInt(2, fruitId);
+            result = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtils.close(null, ps, conn);
+        }
+
+        return result;
+    }
+
+    /**
+     * 根据收藏状态删除购物车项
+     */
+    @Override
+    public int deleteByUserIdFruitIdAndIsFavorite(int userId, int fruitId, boolean isFavorite) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int result = 0;
+
+        String sql = "DELETE FROM cart WHERE user_id = ? AND fruit_id = ? AND is_favorite = ?";
+
+        try {
+            conn = DBUtils.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, fruitId);
+            ps.setBoolean(3, isFavorite);
             result = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

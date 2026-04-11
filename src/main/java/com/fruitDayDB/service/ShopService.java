@@ -81,14 +81,14 @@ public class ShopService {
     }
 
     /**
-     * 删除购物车中的商品
+     * 删除购物车中的商品（仅删除购物车项，不影响收藏）
      * @param userId 用户ID
      * @param fruitId 商品ID
      * @return 成功返回true，失败返回false
      */
     public static boolean removeFromCart(int userId, int fruitId) {
         CartDao cartDao = new CartDaoImpl();
-        int result = cartDao.delete(userId, fruitId);
+        int result = cartDao.deleteByUserIdFruitIdAndIsFavorite(userId, fruitId, false);
         return result > 0;
     }
 
@@ -100,15 +100,13 @@ public class ShopService {
      */
     public static boolean addToFavorites(int userId, int fruitId) {
         CartDao cartDao = new CartDaoImpl();
-        Cart existingCart = cartDao.findByUserIdAndFruitId(userId, fruitId);
+        Cart existingFavorite = cartDao.findByUserIdAndFruitIdAndIsFavorite(userId, fruitId, true);
 
-        if (existingCart != null) {
-            // 已存在则修改为收藏
-            existingCart.setIsFavorite(true);
-            int result = cartDao.update(existingCart);
-            return result > 0;
+        if (existingFavorite != null) {
+            // 已收藏，无需重复操作
+            return true;
         } else {
-            // 不存在则新建为收藏
+            // 插入新的收藏记录（不影响购物车记录）
             Cart cart = new Cart();
             cart.setUserId(userId);
             cart.setFruitId(fruitId);
@@ -120,14 +118,14 @@ public class ShopService {
     }
 
     /**
-     * 从收藏夹中删除商品
+     * 从收藏夹中删除商品（仅删除收藏项，不影响购物车）
      * @param userId 用户ID
      * @param fruitId 商品ID
      * @return 成功返回true，失败返回false
      */
     public static boolean removeFromFavorites(int userId, int fruitId) {
         CartDao cartDao = new CartDaoImpl();
-        int result = cartDao.delete(userId, fruitId);
+        int result = cartDao.deleteByUserIdFruitIdAndIsFavorite(userId, fruitId, true);
         return result > 0;
     }
 
@@ -239,5 +237,27 @@ public class ShopService {
     public static Cart find(int userId, int fruitId) {
         CartDao cartDao = new CartDaoImpl();
         return cartDao.findByUserIdAndFruitId(userId, fruitId);
+    }
+
+    /**
+     * 查询用户购物车中的指定商品（is_favorite=false）
+     * @param userId 用户ID
+     * @param fruitId 商品ID
+     * @return 购物车项，如果不存在则返回null
+     */
+    public static Cart findInCart(int userId, int fruitId) {
+        CartDao cartDao = new CartDaoImpl();
+        return cartDao.findByUserIdAndFruitIdAndIsFavorite(userId, fruitId, false);
+    }
+
+    /**
+     * 查询用户收藏夹中的指定商品（is_favorite=true）
+     * @param userId 用户ID
+     * @param fruitId 商品ID
+     * @return 收藏项，如果不存在则返回null
+     */
+    public static Cart findInFavorites(int userId, int fruitId) {
+        CartDao cartDao = new CartDaoImpl();
+        return cartDao.findByUserIdAndFruitIdAndIsFavorite(userId, fruitId, true);
     }
 }
