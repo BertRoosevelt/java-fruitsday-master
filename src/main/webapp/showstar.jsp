@@ -87,8 +87,7 @@
         <a href="<%= request.getContextPath() %>/FruitServlet?key=info&fid=<%= fruit.getFid() %>"
            class="btn btn-primary">查看</a>
         <a href="<%= request.getContextPath() %>/FruitServlet?key=unfavorite&fruitId=<%= fruit.getFid() %>"
-           class="btn btn-danger"
-           onclick="return confirm('确定要取消收藏？')">取消收藏</a>
+           class="btn btn-danger">取消收藏</a>
       </td>
     </tr>
     <%

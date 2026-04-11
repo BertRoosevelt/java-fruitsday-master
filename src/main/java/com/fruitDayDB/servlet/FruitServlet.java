@@ -164,8 +164,10 @@ public class FruitServlet extends HttpServlet {
             }
 
             if (FavoriteService.isFavorite(user.getId(), fruitId)) {
+                // 已收藏则切换为取消收藏
+                FavoriteService.removeFromFavorites(user.getId(), fruitId);
                 if (isAjax) {
-                    sendJsonResponse(resp, false, "该商品已在收藏中");
+                    sendJsonResponseWithState(resp, true, "已取消关注", false);
                 } else {
                     resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
                 }
@@ -175,7 +177,7 @@ public class FruitServlet extends HttpServlet {
             FavoriteService.addToFavorites(user.getId(), fruitId);
 
             if (isAjax) {
-                sendJsonResponse(resp, true, "已关注");
+                sendJsonResponseWithState(resp, true, "已关注", true);
             } else {
                 resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
             }
@@ -191,26 +193,52 @@ public class FruitServlet extends HttpServlet {
     }
 
     /**
-     * 取消收藏
+     * 取消收藏（支持 AJAX）
      */
     private void doRemoveFavorite(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         com.fruitDayDB.vo.User user = (com.fruitDayDB.vo.User) session.getAttribute("user");
 
+        boolean isAjax = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"))
+                || req.getHeader("Accept") != null && req.getHeader("Accept").contains("application/json");
+
         if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            if (isAjax) {
+                sendJsonResponse(resp, false, "请先登录");
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            }
             return;
         }
 
         try {
-            int fruitId = Integer.parseInt(req.getParameter("fruitId"));
+            String fruitIdParam = req.getParameter("fruitId");
+            if (fruitIdParam == null) fruitIdParam = req.getParameter("fid");
+            if (fruitIdParam == null) {
+                if (isAjax) {
+                    sendJsonResponse(resp, false, "缺少商品ID参数");
+                } else {
+                    req.setAttribute("error", "参数错误");
+                    req.getRequestDispatcher("/showstar.jsp").forward(req, resp);
+                }
+                return;
+            }
+            int fruitId = Integer.parseInt(fruitIdParam);
             FavoriteService.removeFromFavorites(user.getId(), fruitId);
-            resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=viewFav");
+            if (isAjax) {
+                sendJsonResponseWithState(resp, true, "已取消关注", false);
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=viewFav");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
-            req.setAttribute("error", "参数错误");
-            req.getRequestDispatcher("/showstar.jsp").forward(req, resp);
+            if (isAjax) {
+                sendJsonResponse(resp, false, "参数错误");
+            } else {
+                req.setAttribute("error", "参数错误");
+                req.getRequestDispatcher("/showstar.jsp").forward(req, resp);
+            }
         }
     }
 
@@ -236,6 +264,16 @@ public class FruitServlet extends HttpServlet {
         resp.setContentType("application/json; charset=utf-8");
         String escaped = message.replace("\"", "\\\"");
         resp.getWriter().print("{\"success\":" + success + ",\"message\":\"" + escaped + "\"}");
+    }
+
+    /**
+     * 辅助方法：返回带收藏状态的 JSON 响应
+     */
+    private void sendJsonResponseWithState(HttpServletResponse resp, boolean success, String message, boolean favorited) throws IOException {
+        resp.setContentType("application/json; charset=utf-8");
+        String escaped = message.replace("\\", "\\\\").replace("\"", "\\\"")
+                .replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t");
+        resp.getWriter().print("{\"success\":" + success + ",\"message\":\"" + escaped + "\",\"favorited\":" + favorited + "}");
     }
 
 }
