@@ -173,6 +173,15 @@
     Double cartTotal = (Double) request.getAttribute("cartTotal");
     Integer cartCount = (Integer) request.getAttribute("cartCount");
 
+    // Load cart data directly from the service if not already set (e.g., after redirect)
+    if (cartItems == null && user != null) {
+        cartItems = ShopService.getCartItemsDetail(user.getId());
+        cartTotal = ShopService.getCartTotal(user.getId());
+        cartCount = ShopService.getCartCount(user.getId());
+    }
+    if (cartTotal == null) cartTotal = 0.0;
+    if (cartCount == null) cartCount = 0;
+
     if (cartItems == null || cartItems.isEmpty()) {
   %>
   <div class="empty-cart">

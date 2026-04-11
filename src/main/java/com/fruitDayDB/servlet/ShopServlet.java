@@ -34,7 +34,7 @@ public class ShopServlet extends HttpServlet {
         // 检查用户是否登录
         HttpSession session = req.getSession();
         Object userObj = session.getAttribute("user");
-        if (userObj == null && !key.equals("view")) {
+        if (userObj == null && !"view".equals(key)) {
             req.getRequestDispatcher("/login.jsp").forward(req, resp);
             return;
         }
@@ -103,8 +103,7 @@ public class ShopServlet extends HttpServlet {
 
             // 验证库存
             if (fruit.getInum() < quantity) {
-                req.setAttribute("error", "库存不足");
-                req.getRequestDispatcher("/fruit_info.jsp?fid=" + fruitId).forward(req, resp);
+                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
                 return;
             }
 
@@ -112,11 +111,10 @@ public class ShopServlet extends HttpServlet {
             boolean success = ShopService.addToCart(user.getId(), fruitId, quantity);
 
             if (success) {
-                // 重定向到商品详情页，显示成功提示
-                resp.sendRedirect(req.getContextPath() + "/fruit_info.jsp?fid=" + fruitId + "&success=1");
+                // 重定向到商品详情页（通过FruitServlet加载商品数据）
+                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
             } else {
-                req.setAttribute("error", "添加购物车失败");
-                req.getRequestDispatcher("/fruit_info.jsp?fid=" + fruitId).forward(req, resp);
+                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
             }
         } catch (NumberFormatException e) {
             req.setAttribute("error", "参数错误");
@@ -143,10 +141,9 @@ public class ShopServlet extends HttpServlet {
             boolean success = ShopService.removeFromCart(user.getId(), fruitId);
 
             if (success) {
-                resp.sendRedirect(req.getContextPath() + "/showcart.jsp");
+                resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
             } else {
-                req.setAttribute("error", "删除失败");
-                req.getRequestDispatcher("/showcart.jsp").forward(req, resp);
+                resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
             }
         } catch (NumberFormatException e) {
             req.setAttribute("error", "参数错误");
@@ -189,10 +186,9 @@ public class ShopServlet extends HttpServlet {
             boolean success = ShopService.updateCartQuantity(user.getId(), fruitId, quantity);
 
             if (success) {
-                resp.sendRedirect(req.getContextPath() + "/showcart.jsp?success=1");
+                resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
             } else {
-                req.setAttribute("error", "修改失败");
-                req.getRequestDispatcher("/showcart.jsp").forward(req, resp);
+                resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
             }
         } catch (NumberFormatException e) {
             req.setAttribute("error", "参数错误");
@@ -250,10 +246,9 @@ public class ShopServlet extends HttpServlet {
             boolean success = ShopService.addToFavorites(user.getId(), fruitId);
 
             if (success) {
-                resp.sendRedirect(req.getContextPath() + "/fruit_info.jsp?fid=" + fruitId + "&fav=1");
+                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
             } else {
-                req.setAttribute("error", "添加收藏失败");
-                req.getRequestDispatcher("/fruit_info.jsp?fid=" + fruitId).forward(req, resp);
+                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
             }
         } catch (NumberFormatException e) {
             req.setAttribute("error", "参数错误");
@@ -336,10 +331,9 @@ public class ShopServlet extends HttpServlet {
         boolean success = ShopService.clearCart(user.getId());
 
         if (success) {
-            resp.sendRedirect(req.getContextPath() + "/showcart.jsp?cleared=1");
+            resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
         } else {
-            req.setAttribute("error", "清空失败");
-            req.getRequestDispatcher("/showcart.jsp").forward(req, resp);
+            resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
         }
     }
 }
