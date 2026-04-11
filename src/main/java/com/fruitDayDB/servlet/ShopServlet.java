@@ -47,10 +47,10 @@ public class ShopServlet extends HttpServlet {
                 case "remove":        // 从购物车删除
                     doRemoveFromCart(req, resp);
                     break;
-                case "updateQty":     // 修改数量 ⭐ 新增
+                case "updateQty":     // 修改数量
                     doUpdateQuantity(req, resp);
                     break;
-                case "view":          // 查看购物车 ⭐ 改进
+                case "view":          // 查看购物车
                     doViewCart(req, resp);
                     break;
                 case "favorite":      // 添加到收藏
@@ -67,8 +67,11 @@ public class ShopServlet extends HttpServlet {
                     doClearCart(req, resp);
                     break;
                 default:
+                    resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
                     break;
             }
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
         }
     }
 
