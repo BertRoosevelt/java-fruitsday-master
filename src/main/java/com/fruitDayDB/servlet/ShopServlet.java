@@ -35,7 +35,7 @@ public class ShopServlet extends HttpServlet {
         HttpSession session = req.getSession();
         Object userObj = session.getAttribute("user");
         if (userObj == null && !"view".equals(key)) {
-            req.getRequestDispatcher("/login.jsp").forward(req, resp);
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
             return;
         }
 
@@ -77,7 +77,6 @@ public class ShopServlet extends HttpServlet {
 
     /**
      * 添加商品到购物车
-     * 参数: fruitId, quantity
      */
     private void doAddToCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -90,38 +89,29 @@ public class ShopServlet extends HttpServlet {
 
         try {
             String fruitIdParam = req.getParameter("fruitId");
-            if (fruitIdParam == null) fruitIdParam = req.getParameter("fid");
+            if (fruitIdParam == null) fruitIdParam = req.getParameter("fid"); // 兼容传入的是 fid
             int fruitId = Integer.parseInt(fruitIdParam);
+
             String quantityParam = req.getParameter("quantity");
             if (quantityParam == null) quantityParam = "1";
             int quantity = Integer.parseInt(quantityParam);
 
-            // 验证商品是否存在
             Fruit fruit = FruitService.info(fruitId);
-            if (fruit == null) {
-                req.setAttribute("error", "商品不存在");
-                req.getRequestDispatcher("/index.jsp").forward(req, resp);
+            if (fruit == null || fruit.getInum() < quantity) {
+                // 库存不足或不存在直接返回详情页
+                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&id=" + user.getId() + "&fid=" + fruitId);
                 return;
             }
 
-            // 验证库存
-            if (fruit.getInum() < quantity) {
-                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
-                return;
-            }
+            ShopService.addToCart(user.getId(), fruitId, quantity);
 
-            // 添加到购物车
-            boolean success = ShopService.addToCart(user.getId(), fruitId, quantity);
+            // 跳转务必带上 id 参数触发 FruitServlet 状态刷新
+            resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&id=" + user.getId() + "&fid=" + fruitId);
 
-            if (success) {
-                // 重定向到商品详情页（通过FruitServlet加载商品数据）
-                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
-            } else {
-                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
-            }
-        } catch (NumberFormatException e) {
-            req.setAttribute("error", "参数错误");
-            req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 防止崩溃，异常兜底回到主页
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
         }
     }
 
@@ -140,22 +130,15 @@ public class ShopServlet extends HttpServlet {
 
         try {
             int fruitId = Integer.parseInt(req.getParameter("fruitId"));
-
-            boolean success = ShopService.removeFromCart(user.getId(), fruitId);
-
-            if (success) {
-                resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
-            } else {
-                resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
-            }
+            ShopService.removeFromCart(user.getId(), fruitId);
+            resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
         } catch (NumberFormatException e) {
-            req.setAttribute("error", "参数错误");
-            req.getRequestDispatcher("/showcart.jsp").forward(req, resp);
+            resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
         }
     }
 
     /**
-     * 修改购物车商品的数量 ⭐ 新增
+     * 修改购物车商品的数量
      * 参数: fruitId, quantity
      */
     private void doUpdateQuantity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -173,26 +156,21 @@ public class ShopServlet extends HttpServlet {
 
             // 验证数量
             if (quantity <= 0) {
-                req.setAttribute("error", "数量必须大于0");
-                req.getRequestDispatcher("/showcart.jsp").forward(req, resp);
+                ShopService.removeFromCart(user.getId(), fruitId);
+                resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
                 return;
             }
 
             // 验证库存
             Fruit fruit = FruitService.info(fruitId);
             if (fruit == null || fruit.getInum() < quantity) {
-                req.setAttribute("error", "库存不足");
-                req.getRequestDispatcher("/showcart.jsp").forward(req, resp);
+                req.setAttribute("error", "商品库存不足");
+                req.getRequestDispatcher("/ShopServlet?key=view").forward(req, resp);
                 return;
             }
 
-            boolean success = ShopService.updateCartQuantity(user.getId(), fruitId, quantity);
-
-            if (success) {
-                resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
-            } else {
-                resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
-            }
+            ShopService.updateCartQuantity(user.getId(), fruitId, quantity);
+            resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
         } catch (NumberFormatException e) {
             req.setAttribute("error", "参数错误");
             req.getRequestDispatcher("/showcart.jsp").forward(req, resp);
@@ -200,7 +178,7 @@ public class ShopServlet extends HttpServlet {
     }
 
     /**
-     * 查看购物车 ⭐ 改进（添加详细信息）
+     * 查看购物车
      */
     private void doViewCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -222,7 +200,6 @@ public class ShopServlet extends HttpServlet {
 
     /**
      * 添加商品到收藏
-     * 参数: fruitId
      */
     private void doAddToFavorite(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -238,24 +215,16 @@ public class ShopServlet extends HttpServlet {
             if (fruitIdParam == null) fruitIdParam = req.getParameter("fid");
             int fruitId = Integer.parseInt(fruitIdParam);
 
-            // 验证商品是否存在
             Fruit fruit = FruitService.info(fruitId);
-            if (fruit == null) {
-                req.setAttribute("error", "商品不存在");
-                req.getRequestDispatcher("/index.jsp").forward(req, resp);
-                return;
+            if (fruit != null) {
+                ShopService.addToFavorites(user.getId(), fruitId);
             }
 
-            boolean success = ShopService.addToFavorites(user.getId(), fruitId);
+            resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&id=" + user.getId() + "&fid=" + fruitId);
 
-            if (success) {
-                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
-            } else {
-                resp.sendRedirect(req.getContextPath() + "/FruitServlet?key=info&fid=" + fruitId);
-            }
-        } catch (NumberFormatException e) {
-            req.setAttribute("error", "参数错误");
-            req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
         }
     }
 
@@ -274,15 +243,9 @@ public class ShopServlet extends HttpServlet {
 
         try {
             int fruitId = Integer.parseInt(req.getParameter("fruitId"));
+            ShopService.removeFromFavorites(user.getId(), fruitId);
+            resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=viewFav");
 
-            boolean success = ShopService.removeFromFavorites(user.getId(), fruitId);
-
-            if (success) {
-                resp.sendRedirect(req.getContextPath() + "/showstar.jsp");
-            } else {
-                req.setAttribute("error", "删除失败");
-                req.getRequestDispatcher("/showstar.jsp").forward(req, resp);
-            }
         } catch (NumberFormatException e) {
             req.setAttribute("error", "参数错误");
             req.getRequestDispatcher("/showstar.jsp").forward(req, resp);
@@ -297,22 +260,15 @@ public class ShopServlet extends HttpServlet {
         com.fruitDayDB.vo.User user = (com.fruitDayDB.vo.User) session.getAttribute("user");
 
         if (user != null) {
-            List<ShopService.CartItemDetail> favorites = new ArrayList<>();
-
-            // 获取收藏的商品详情
+            List<Object> favorites = new ArrayList<>();
             List<Cart> favCarts = ShopService.getFavorites(user.getId());
+
             for (Cart cart : favCarts) {
                 Fruit fruit = FruitService.info(cart.getFruitId());
                 if (fruit != null) {
-                    ShopService.CartItemDetail detail = new ShopService.CartItemDetail();
-                    detail.setCartId(cart.getId());
-                    detail.setFruitId(cart.getFruitId());
-                    detail.setFruitName(fruit.getFname());
-                    detail.setPrice(fruit.getUp());
-                    favorites.add(detail);
+                    favorites.add(fruit);
                 }
             }
-
             req.setAttribute("favorites", favorites);
         }
 
@@ -331,12 +287,7 @@ public class ShopServlet extends HttpServlet {
             return;
         }
 
-        boolean success = ShopService.clearCart(user.getId());
-
-        if (success) {
-            resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
-        }
+        ShopService.clearCart(user.getId());
+        resp.sendRedirect(req.getContextPath() + "/ShopServlet?key=view");
     }
 }
