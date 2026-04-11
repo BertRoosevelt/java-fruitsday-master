@@ -66,9 +66,13 @@ public class UserDaoImpl implements UserDao {
         User u = null;
         String sql="";
         if(boo)
-            sql = "select id,email,phone,pwd,uname from user where email=?";
+            sql = "select u.id,u.email,u.phone,u.pwd,u.uname, " +
+                  "(SELECT COUNT(*) FROM admin a WHERE a.user_id=u.id) as is_admin " +
+                  "from user u where u.email=?";
         else
-            sql = "select id,email,phone,pwd,uname from user where phone=?";
+            sql = "select u.id,u.email,u.phone,u.pwd,u.uname, " +
+                  "(SELECT COUNT(*) FROM admin a WHERE a.user_id=u.id) as is_admin " +
+                  "from user u where u.phone=?";
 
         try{
             conn = DBUtils.getConnection();
@@ -82,6 +86,7 @@ public class UserDaoImpl implements UserDao {
                 u.setPhone(rs.getString("phone"));
                 u.setPwd(rs.getString("pwd"));
                 u.setUname(rs.getString("uname"));
+                u.setIsAdmin(rs.getInt("is_admin") > 0);
                 System.out.println(u.toString());
             }
         }catch(SQLException e){

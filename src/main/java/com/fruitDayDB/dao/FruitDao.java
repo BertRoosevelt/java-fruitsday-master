@@ -18,6 +18,9 @@ public interface FruitDao {
     //全部商品
     public List<Fruit> findall();
 
+    //搜索商品（按名称模糊查询）
+    public List<Fruit> search(String keyword);
+
     //添加商品
     public int add(Fruit fruit);
 
@@ -25,5 +28,11 @@ public interface FruitDao {
     public int del(int fid);
 
     //更新商品
-    public   int up(Fruit fruit);
+    public int up(Fruit fruit);
+
+    //设为热卖
+    public int setHot(int fid);
+
+    //取消热卖
+    public int removeHot(int fid);
 }

@@ -65,7 +65,12 @@ public class UserServlet extends HttpServlet {
 
             if (user != null) {
                 req.getSession().setAttribute("user", user);
-                resp.sendRedirect(req.getContextPath() + "/index.jsp");
+                // 管理员跳转到后台，普通用户跳转到首页
+                if (user.isAdmin()) {
+                    resp.sendRedirect(req.getContextPath() + "/BSindex.jsp");
+                } else {
+                    resp.sendRedirect(req.getContextPath() + "/index.jsp");
+                }
             } else {
                 resp.sendRedirect(req.getContextPath() + "/login.jsp?error=invalid");
             }

@@ -14,9 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by xi on 2015/10/18.
+ * 后台管理 Servlet（仅管理员可访问）
  */
 public class BSServlet extends HttpServlet {
+
+    /** 检查管理员权限，未登录或非管理员则跳转到登录页 */
+    private boolean checkAdmin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        User user = (User) req.getSession().getAttribute("user");
+        if (user == null || !user.isAdmin()) {
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            return false;
+        }
+        return true;
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,6 +39,8 @@ public class BSServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
+        if (!checkAdmin(req, resp)) return;
+
         String key=req.getParameter("key");
 
         if("alluser".equals(key))
@@ -53,6 +65,12 @@ public class BSServlet extends HttpServlet {
             doHotfruit(req,resp);
         else if("upfruit".equals(key))
             doUpfruit(req,resp);
+        else if("sethot".equals(key))
+            doSetHot(req, resp);
+        else if("removehot".equals(key))
+            doRemoveHot(req, resp);
+        else
+            resp.sendRedirect(req.getContextPath() + "/BSindex.jsp");
 
     }
     protected void doUpfruit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -101,12 +119,12 @@ public class BSServlet extends HttpServlet {
     protected void doAddfruit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String fname=req.getParameter("fname");
         String spec=req.getParameter("spec");
-       double up= Double.parseDouble(req.getParameter("up"));
+        double up= Double.parseDouble(req.getParameter("up"));
         String t1=req.getParameter("t1");
         String t2=req.getParameter("t2");
         int inum= Integer.parseInt(req.getParameter("inum"));
-        int fid= Integer.parseInt(req.getParameter("fid"));
-        Fruit fruit=new Fruit(fid,fname,spec,up,t1,t2,inum);
+        // fid is AUTO_INCREMENT, so we pass 0 and let DB assign it
+        Fruit fruit=new Fruit(fname,spec,up,t1,t2,inum);
 
         boolean boo=FruitService.add(fruit);
 
@@ -177,12 +195,9 @@ public class BSServlet extends HttpServlet {
 
         User user=new User(id,email,phone,pwd,uname);
 
-        User boo=UserService.add(user);
+        boolean ok=UserService.upUser(user);
 
-        if(boo!=null)
-        {
-            doAlluser(req,resp);
-        }
+        doAlluser(req, resp);
 
     }
 
@@ -197,5 +212,17 @@ public class BSServlet extends HttpServlet {
         }
 
         req.getRequestDispatcher("BSindex3.jsp").forward(req, resp);
+    }
+
+    protected void doSetHot(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int fid = Integer.parseInt(req.getParameter("fid"));
+        FruitService.setHot(fid);
+        doAllfruit(req, resp);
+    }
+
+    protected void doRemoveHot(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int fid = Integer.parseInt(req.getParameter("fid"));
+        FruitService.removeHot(fid);
+        doAllfruit(req, resp);
     }
 }

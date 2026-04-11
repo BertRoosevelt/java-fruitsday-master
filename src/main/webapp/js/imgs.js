@@ -120,9 +120,12 @@ function addCart(idd,fidd)
 	var fid=parseInt(fidd);
 	var add=document.getElementById("cart");
 	var f=document.getElementById("fform");
+	var base=typeof ctx !== 'undefined' ? ctx : '';
+	var numEl=document.getElementById("num"+fid);
+	var quantity=numEl ? parseInt(numEl.innerText) : 1;
 	if(add.value=="加入购物车")
 	{
-		f.action= "/x-test/ShopServlet?key=add&id="+id+"&fid="+fid+"&str=cart";
+		f.action= base+"/ShopServlet?key=add&fruitId="+fid+"&quantity="+quantity;
 		f.submit();
 	}
 	else
@@ -135,8 +138,9 @@ function addStar(idd,fidd)
 	var fid=parseInt(fidd);
 	var add=document.getElementById("star");
 	var f=document.getElementById("fform");
+	var base=typeof ctx !== 'undefined' ? ctx : '';
 	if(add.value=="关注商品"){
-		f.action="/x-test/ShopServlet?key=add&id="+id+"&fid="+fid+"&str=star";
+		f.action=base+"/ShopServlet?key=favorite&fruitId="+fid;
 		f.submit();
 	}
 	else

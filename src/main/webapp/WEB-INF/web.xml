@@ -37,6 +37,11 @@
         <servlet-class>com.fruitDayDB.servlet.BSServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>adminServlet</servlet-name>
+        <servlet-class>com.fruitDayDB.servlet.AdminServlet</servlet-class>
+    </servlet>
+
     <!-- Servlet 映射 -->
     <servlet-mapping>
         <servlet-name>fruitServlet</servlet-name>
@@ -66,6 +71,11 @@
     <servlet-mapping>
         <servlet-name>bsServlet</servlet-name>
         <url-pattern>/BSServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>adminServlet</servlet-name>
+        <url-pattern>/AdminServlet</url-pattern>
     </servlet-mapping>
 
 </web-app>

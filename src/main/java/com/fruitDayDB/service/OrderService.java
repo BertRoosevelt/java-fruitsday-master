@@ -239,6 +239,22 @@ public class OrderService {
     }
 
     /**
+     * 获取所有订单（管理员）
+     */
+    public static List<Order> getAllOrders() {
+        OrderDao orderDao = new OrderDaoImpl();
+        return orderDao.findAll();
+    }
+
+    /**
+     * 获取所有指定状态的订单（管理员）
+     */
+    public static List<Order> getAllOrdersByStatus(String status) {
+        OrderDao orderDao = new OrderDaoImpl();
+        return orderDao.findAllByStatus(status);
+    }
+
+    /**
      * 获取待发货的订单数量（管理员用）
      * @return 所有待发货订单数
      */

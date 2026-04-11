@@ -9,6 +9,15 @@ public class User {
     private String phone;
     private String pwd;
     private String uname;
+    private boolean isAdmin;
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
 
     public int getId() {
         return id;

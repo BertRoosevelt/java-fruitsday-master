@@ -12,13 +12,15 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>水果信息</title>
+  <title>水果信息 - 天天果园</title>
   <link rel="stylesheet" type="text/css" href="css/imgs.css"/>
   <link rel="stylesheet" type="text/css" href="css/main.css"/>
   <script src="js/imgs.js" type="text/javascript" charset="utf-8"></script>
+  <script>var ctx = '<%= request.getContextPath() %>';</script>
   <%
     Fruit fruit=(Fruit)request.getAttribute("fruit");
     List<Fruit> hotFruits=(List<Fruit>)request.getAttribute("fruits");
+    if (hotFruits == null) hotFruits = new java.util.ArrayList<>();
     User user=new User(0);
     if(session.getAttribute("user")!=null)
        user=(User)session.getAttribute("user");

@@ -79,8 +79,26 @@ public class FruitService {
      */
     public static List<Fruit> search(String keyword) {
         FruitDao fruitDao = new FruitDaoImpl();
-        // 这个方法需要在 FruitDaoImpl 中实现
-        // 暂时返回空列表
-        return fruitDao.findall();
+        return fruitDao.search(keyword);
+    }
+
+    /**
+     * 设为热卖商品（管理员）
+     * @param fruitId 商品ID
+     * @return 成功返回true
+     */
+    public static boolean setHot(int fruitId) {
+        FruitDao fruitDao = new FruitDaoImpl();
+        return fruitDao.setHot(fruitId) > 0;
+    }
+
+    /**
+     * 取消热卖商品（管理员）
+     * @param fruitId 商品ID
+     * @return 成功返回true
+     */
+    public static boolean removeHot(int fruitId) {
+        FruitDao fruitDao = new FruitDaoImpl();
+        return fruitDao.removeHot(fruitId) > 0;
     }
 }
