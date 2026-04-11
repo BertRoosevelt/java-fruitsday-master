@@ -121,6 +121,16 @@ function addCart(idd,fidd)
 	var add=document.getElementById("cart");
 	var f=document.getElementById("fform");
 	var base=typeof ctx !== 'undefined' ? ctx : '';
+	if(id===0){
+		if(confirm("请先登录后再加入购物车，是否前往登录？")){
+			window.location.href=base+"/login.jsp";
+		}
+		return;
+	}
+	if(!fid||fid<=0){
+		alert("商品信息有误，请刷新页面重试");
+		return;
+	}
 	var numEl=document.getElementById("num"+fid);
 	var quantity=numEl ? parseInt(numEl.innerText) : 1;
 	if(add.value=="加入购物车")
@@ -139,6 +149,16 @@ function addStar(idd,fidd)
 	var add=document.getElementById("star");
 	var f=document.getElementById("fform");
 	var base=typeof ctx !== 'undefined' ? ctx : '';
+	if(id===0){
+		if(confirm("请先登录后再关注商品，是否前往登录？")){
+			window.location.href=base+"/login.jsp";
+		}
+		return;
+	}
+	if(!fid||fid<=0){
+		alert("商品信息有误，请刷新页面重试");
+		return;
+	}
 	if(add.value=="关注商品"){
 		f.action=base+"/ShopServlet?key=favorite&fruitId="+fid;
 		f.submit();
