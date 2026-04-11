@@ -14,6 +14,7 @@
   <meta charset="utf-8" />
   <title>水果信息 - 天天果园</title>
   <link rel="stylesheet" type="text/css" href="css/imgs.css"/>
+  <link rel="stylesheet" type="text/css" href="css/fruit_info.css"/>
   <link rel="stylesheet" type="text/css" href="css/main.css"/>
   <script src="js/imgs.js" type="text/javascript" charset="utf-8"></script>
   <script>var ctx = '<%= request.getContextPath() %>';</script>
@@ -81,8 +82,10 @@
       </div>
       <div class="Unum"><span id="numl" onclick="number(1,<%=fruit.getFid()%>)">-</span><span id="num<%=fruit.getFid()%>">1</span><span id="numr" onclick="number(0,<%=fruit.getFid()%>)">+</span></div>
       </div>
+          <div class="btn-row">
           <div class="Uadd"><input type="button" name="add" id="cart" value="<%=tit1%>" onclick="addCart(<%=user.getId()%>,<%=fruit.getFid()%>)" /></div>
           <div class="starbutton"><input type="button" name="add" id="star" value="<%=tit2%>" onclick="addStar(<%=user.getId()%>,<%=fruit.getFid()%>)"/></div>
+          </div>
       </div>
     </form>
 

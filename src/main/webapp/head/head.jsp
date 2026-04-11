@@ -31,6 +31,9 @@
       <a href="<%= request.getContextPath() %>/showcart.jsp">购物车</a>
       <a href="<%= request.getContextPath() %>/OrderServlet?key=list">我的订单</a>
       <span>欢迎，<strong><%= user.getUname() %></strong></span>
+      <% if (user.isAdmin()) { %>
+      <a href="<%= request.getContextPath() %>/BSindex.jsp" class="admin-link">⚙ 管理后台</a>
+      <% } %>
       <a href="<%= request.getContextPath() %>/UserServlet?key=logout">退出登录</a>
       <%
       } else {
@@ -87,6 +90,19 @@
 
   .header-menu a:hover {
     color: #f0ad4e;
+  }
+
+  .header-menu .admin-link {
+    background-color: #669933;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  .header-menu .admin-link:hover {
+    background-color: #558822;
+    color: #fff;
   }
 
   .header-menu strong {

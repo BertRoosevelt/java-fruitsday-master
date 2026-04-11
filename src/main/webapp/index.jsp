@@ -45,6 +45,10 @@
 </div>
 
 <div class="con">
+  <div class="section-header">
+    <h2>🔥 热卖商品</h2>
+    <a href="<%= request.getContextPath() %>/SELServlet?key=hot" class="more-link">查看更多 &rsaquo;</a>
+  </div>
   <div class="fruitboxs">
     <%
       if (hotFruits != null) {
