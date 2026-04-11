@@ -19,9 +19,10 @@ public class FavoriteService {
      */
     public static boolean addToFavorites(int userId, int fruitId) {
         FavoriteDao favoriteDao = new FavoriteDaoImpl();
+        // 检查是否已经收藏，防止重复
         Favorite existing = favoriteDao.findByUserIdAndFruitId(userId, fruitId);
         if (existing != null) {
-            return true; // 已收藏，不重复添加
+            return true; // 已经收藏过了，直接返回成功
         }
         Favorite favorite = new Favorite(userId, fruitId);
         int result = favoriteDao.add(favorite);
@@ -41,7 +42,7 @@ public class FavoriteService {
     }
 
     /**
-     * 查询用户是否收藏了某商品
+     * 检查商品是否已被用户收藏
      * @param userId 用户ID
      * @param fruitId 商品ID
      * @return 已收藏返回true，否则返回false
@@ -52,7 +53,7 @@ public class FavoriteService {
     }
 
     /**
-     * 获取用户的所有收藏
+     * 获取用户的收藏列表
      * @param userId 用户ID
      * @return 收藏列表
      */
