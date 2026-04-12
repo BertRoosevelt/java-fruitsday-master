@@ -26,7 +26,7 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>个人中心 - 天天果园</title>
+    <title>个人中心 - 水果超市管理系统</title>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
     <style>
         .uc-wrap {max-width: 1050px; margin: 20px auto; display: flex; gap: 20px;}

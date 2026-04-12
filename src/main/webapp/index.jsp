@@ -29,7 +29,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
-  <title>天天果园 - 水果网购首选品牌</title>
+  <title>水果超市管理系统 - 水果网购首选品牌</title>
   <link rel="stylesheet" type="text/css" href="<%=ctx%>/css/main.css"/>
   <!-- 保留旧的js用于其他页面可能依赖的内容，但首页轮播不再依赖它 -->
   <script src="<%=ctx%>/js/imgs.js" type="text/javascript" charset="utf-8"></script>
@@ -90,11 +90,11 @@
 <!-- 1. 现代化巨幅海报 Banner (点击前往热卖页) -->
 <div class="modern-banner-wrap">
   <div class="modern-banner" id="banner-container">
-    <div class="slide show"><a href="<%=ctx%>/SELServlet?key=hot"><img src="<%=ctx%>/img/index/h0.jpg" alt="天天果园活动1" onerror="this.src='<%=ctx%>/img/default-banner.jpg'"/></a></div>
-    <div class="slide"><a href="<%=ctx%>/SELServlet?key=hot"><img src="<%=ctx%>/img/index/h1.jpg" alt="天天果园活动2" onerror="this.src='<%=ctx%>/img/default-banner.jpg'"/></a></div>
-    <div class="slide"><a href="<%=ctx%>/SELServlet?key=hot"><img src="<%=ctx%>/img/index/h2.jpg" alt="天天果园活动3" onerror="this.src='<%=ctx%>/img/default-banner.jpg'"/></a></div>
-    <div class="slide"><a href="<%=ctx%>/SELServlet?key=hot"><img src="<%=ctx%>/img/index/h3.jpg" alt="天天果园活动4" onerror="this.src='<%=ctx%>/img/default-banner.jpg'"/></a></div>
-    <div class="slide"><a href="<%=ctx%>/SELServlet?key=hot"><img src="<%=ctx%>/img/index/h4.jpg" alt="天天果园活动5" onerror="this.src='<%=ctx%>/img/default-banner.jpg'"/></a></div>
+    <div class="slide show"><a href="<%=ctx%>/SELServlet?key=hot"><img src="<%=ctx%>/img/index/h0.jpg" alt="水果超市管理系统活动1" onerror="this.src='<%=ctx%>/img/default-banner.jpg'"/></a></div>
+    <div class="slide"><a href="<%=ctx%>/SELServlet?key=hot"><img src="<%=ctx%>/img/index/h1.jpg" alt="水果超市管理系统活动2" onerror="this.src='<%=ctx%>/img/default-banner.jpg'"/></a></div>
+    <div class="slide"><a href="<%=ctx%>/SELServlet?key=hot"><img src="<%=ctx%>/img/index/h2.jpg" alt="水果超市管理系统活动3" onerror="this.src='<%=ctx%>/img/default-banner.jpg'"/></a></div>
+    <div class="slide"><a href="<%=ctx%>/SELServlet?key=hot"><img src="<%=ctx%>/img/index/h3.jpg" alt="水果超市管理系统活动4" onerror="this.src='<%=ctx%>/img/default-banner.jpg'"/></a></div>
+    <div class="slide"><a href="<%=ctx%>/SELServlet?key=hot"><img src="<%=ctx%>/img/index/h4.jpg" alt="水果超市管理系统活动5" onerror="this.src='<%=ctx%>/img/default-banner.jpg'"/></a></div>
 
     <div class="banner-indicators" id="banner-indicators">
       <span class="active"></span>

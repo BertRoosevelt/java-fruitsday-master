@@ -19,7 +19,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>我的收藏 - 天天果园</title>
+  <title>我的收藏 - 水果超市管理系统</title>
   <link rel="stylesheet" type="text/css" href="css/main.css"/>
   <style>
     .fav-container { max-width: 1000px; margin: 20px auto; }

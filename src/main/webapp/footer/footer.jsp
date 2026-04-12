@@ -25,7 +25,7 @@
   <div class="foot_box">
     <div class="con">
       <p>版权所有 © 2015版权所有 © 2015 保留所有权利 保留所有权利 | <a href="http://www.miitbeian.gov.cn/">沪ICP备12042163</a>	| <a href="http://www.cnzz.com/stat/website.php?web_id=2559666">站长统计</a></p>
-      <p class="b">天天果园 鲜果网购</p>
+      <p class="b">水果超市管理系统 鲜果网购</p>
     </div>
   </div>
 </body>

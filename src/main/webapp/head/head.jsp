@@ -7,7 +7,7 @@
   <div class="header-container">
     <div class="logo">
       <a href="<%= request.getContextPath() %>/index.jsp">
-        <h1>🍎 天天果园</h1>
+        <h1>🍎 水果超市管理系统</h1>
       </a>
     </div>
 

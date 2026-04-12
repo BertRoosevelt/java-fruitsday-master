@@ -26,7 +26,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
-  <title><%= pageTitle %> - 天天果园</title>
+  <title><%= pageTitle %> - 水果超市管理系统</title>
   <link rel="stylesheet" type="text/css" href="css/main.css"/>
   <link rel="stylesheet" type="text/css" href="css/index.css"/>
   <style>

@@ -12,7 +12,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>订单详情 - 天天果园</title>
+    <title>订单详情 - 水果超市管理系统</title>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
     <style>
         .detail-container {

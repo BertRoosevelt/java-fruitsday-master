@@ -14,7 +14,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
-  <title>添加用户 - 天天果园后台</title>
+  <title>添加用户 - 水果超市管理系统后台</title>
 </head>
 <body>
 <jsp:include page="admin/sidebar.jsp"><jsp:param name="active" value="users"/></jsp:include>

@@ -70,7 +70,7 @@
 <div class="admin-wrap">
 <div class="admin-sidebar">
     <div class="sidebar-logo">
-        <a href="<%= request.getContextPath() %>/BSindex.jsp">🍎 天天果园后台</a>
+        <a href="<%= request.getContextPath() %>/BSindex.jsp">🍎 水果超市管理系统后台</a>
     </div>
     <div class="sidebar-user">管理员：<%= adminUser.getUname() %></div>
     <ul class="sidebar-nav">

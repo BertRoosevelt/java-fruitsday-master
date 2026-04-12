@@ -14,7 +14,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
-  <title>新增商品 - 天天果园后台</title>
+  <title>新增商品 - 水果超市管理系统后台</title>
 </head>
 <body>
 <jsp:include page="admin/sidebar.jsp"><jsp:param name="active" value="fruits"/></jsp:include>

@@ -6,7 +6,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>用户登陆 - 天天果园 - 水果网购首选品牌</title>
+  <title>用户登陆 - 水果超市管理系统 - 水果网购首选品牌</title>
   <link rel="stylesheet" type="text/css" href="css/main.css"/>
   <style>
     body {
@@ -127,7 +127,7 @@
 <body>
 <div class="login-container">
   <div class="login-header">
-    <h1>🍎 天天果园</h1>
+    <h1>🍎 水果超市管理系统</h1>
     <p>会员登录</p>
   </div>
 

@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>用户注册 - 天天果园</title>
+    <title>用户注册 - 水果超市管理系统</title>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
     <style>
         body {
@@ -106,7 +106,7 @@
 <body>
 <div class="register-container">
     <div class="register-header">
-        <h1>🍎 天天果园</h1>
+        <h1>🍎 水果超市管理系统</h1>
         <p>新用户注册</p>
     </div>
 
